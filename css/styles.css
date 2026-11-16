@@ -1109,10 +1109,39 @@ textarea:focus-visible {
 
 /* 2. Looking for this? */
 .intro__slide--looking .intro__line { left: 50%; top: 19.4%; transform: translate(-50%, -50%); font-size: 6.8cqw; }
-.intro__slide--looking .intro__img  {
+.intro__face {
+  position: absolute;
   left: 12.15%; top: 25.6%; width: 79.17%;
+  aspect-ratio: 1900 / 1270;
+}
+.intro__face > .intro__img {
+  inset: 0; width: 100%; height: 100%;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 9%);
   mask-image: linear-gradient(to bottom, transparent 0, #000 9%);
+}
+
+/* Eye windows, measured on intro-face.jpg (1900 × 1270): left eye 590,1100 and
+   right eye 1045,1105, each about 225 × 100 px. The copy inside is the full photo,
+   lined up exactly, so at rest nothing changes; js/main.js nudges it toward the mouse. */
+.intro__eye {
+  position: absolute;
+  overflow: hidden;
+  top: 86.61%;
+  width: 11.84%;
+  height: 7.87%;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 55%, #000 45%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 55%, #000 45%, transparent 100%);
+}
+.intro__eye--left  { left: 31.05%; --eye-l: 590; --eye-t: 1100; }
+.intro__eye--right { left: 55%; top: 87.01%; --eye-l: 1045; --eye-t: 1105; }
+.intro__eye img {
+  position: absolute;
+  max-width: none;
+  width: calc(1900 / 225 * 100%);
+  height: auto;
+  left: calc(var(--eye-l) / 225 * -100%);
+  top: calc(var(--eye-t) / 100 * -100%);
+  will-change: transform;
 }
 
 /* 3. Or maybe this? */
@@ -1208,7 +1237,7 @@ html:not(.js) .intro__slot { display: none; }
   .intro__slide--hello .intro__img  { left: 50%; top: auto; bottom: 0; width: auto; height: 46%; transform: translateX(-50%); }
 
   .intro__slide--looking .intro__line { top: 17%; font-size: 12.5cqw; }
-  .intro__slide--looking .intro__img  { left: 50%; top: auto; bottom: 0; width: auto; height: 62%; transform: translateX(-50%); }
+  .intro__slide--looking .intro__face { left: 50%; top: auto; bottom: 0; width: auto; height: 62%; transform: translateX(-50%); }
 
   .intro__slide--maybe .intro__line { left: 8%; top: 17%; transform: none; font-size: 15cqw; }
   .intro__slide--maybe .intro__slot { left: 50%; top: auto; bottom: 9%; width: min(100%, 62vh); transform: translateX(-50%); --slot-layout-width: 600px; }

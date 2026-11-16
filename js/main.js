@@ -42,6 +42,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 document.addEventListener('DOMContentLoaded', () => {
   initSlotFit();
   initIntro();
+  initEyes();
   initHeader();
   initNav();
   initReveal();
@@ -236,6 +237,80 @@ function initIntro() {
       slides[0].classList.add('is-current', 'is-settled');
     }
   });
+}
+
+/* ---------- "Looking for this?": the eyes follow the mouse ----------
+   Each eye window holds a copy of the photo lined up exactly over the original;
+   sliding that copy a little moves the iris while the lids and lashes stay put.
+   Without a mouse (phones), the eyes glance around slowly on their own. */
+function initEyes() {
+  const eyes = Array.from(document.querySelectorAll('[data-eye]'));
+  const slide = document.querySelector('.intro__slide--looking');
+  if (!eyes.length || !slide || reduceMotion.matches) return;
+
+  const MAX_X = 0.16; // furthest the iris travels sideways, as a share of the eye window's width
+  const MAX_Y = 0.05; // and up/down, as a share of its height (kept small so lashes don't shift)
+  const hasMouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  let mouse = null;   // last mouse position
+  let look = { x: 0, y: 0 };   // where the eyes are looking now (-1 … 1)
+  let running = false;
+
+  if (hasMouse) {
+    window.addEventListener('mousemove', (e) => { mouse = { x: e.clientX, y: e.clientY }; wake(); }, { passive: true });
+    document.addEventListener('mouseleave', () => { mouse = null; });
+  }
+
+  const visible = () => {
+    const intro = slide.closest('.intro');
+    if (intro && intro.classList.contains('is-snapping')) {
+      return slide.classList.contains('is-current') || slide.classList.contains('is-incoming');
+    }
+    const r = slide.getBoundingClientRect();
+    return r.bottom > 0 && r.top < window.innerHeight;
+  };
+
+  function target(t) {
+    if (mouse) {
+      // Aim at the mouse from the point between the two eyes.
+      const a = eyes[0].getBoundingClientRect();
+      const b = eyes[eyes.length - 1].getBoundingClientRect();
+      const cx = (a.left + b.right) / 2;
+      const cy = (a.top + b.bottom) / 2;
+      return {
+        x: Math.max(-1, Math.min(1, (mouse.x - cx) / (window.innerWidth * 0.45))),
+        y: Math.max(-1, Math.min(1, (mouse.y - cy) / (window.innerHeight * 0.45))),
+      };
+    }
+    if (!hasMouse) {
+      // Idle glance: drift left and right, pausing now and then.
+      return { x: Math.sin(t / 1400) * 0.8 * Math.min(1, Math.abs(Math.sin(t / 3100)) * 1.6), y: 0 };
+    }
+    return { x: 0, y: 0 };
+  }
+
+  function frame(t) {
+    if (!visible()) { running = false; return; }
+    const goal = target(t);
+    look.x += (goal.x - look.x) * 0.12; // ease toward the goal for a natural follow
+    look.y += (goal.y - look.y) * 0.12;
+    eyes.forEach((eye) => {
+      const img = eye.firstElementChild;
+      img.style.transform = `translate(${(look.x * MAX_X * eye.clientWidth).toFixed(2)}px, ${(look.y * MAX_Y * eye.clientHeight).toFixed(2)}px)`;
+    });
+    requestAnimationFrame(frame);
+  }
+
+  function wake() {
+    if (running || !visible()) return;
+    running = true;
+    requestAnimationFrame(frame);
+  }
+
+  // Start whenever the "Looking for this?" screen comes into view.
+  new MutationObserver(wake).observe(slide, { attributes: true, attributeFilter: ['class'] });
+  window.addEventListener('scroll', wake, { passive: true });
+  wake();
 }
 
 /* ---------- Slot machine: scale the 860px-wide machine to fit its box ---------- */

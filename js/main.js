@@ -19,7 +19,7 @@ const FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbx-02Ap8oKV1Pw5Lq
    - the short share link (https://calendar.app.google/…), shown as a button
    While it still says YOUR_BOOKING_URL_HERE, a "booking opens soon" note shows.
    -------------------------------------------------------------------------- */
-const BOOKING_URL = 'YOUR_BOOKING_URL_HERE';
+const BOOKING_URL = 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ1Q5F74ffKXCiqlz4yuGBwal7FCJKbMy-8JYSYDOU5OkCIH8eJu_eOvgAteJN2A6ReZXtQWbgcQ?gv=true';
 
 /* Upload limits for "Upload images of your work" */
 const MAX_FILES = 10;

@@ -175,10 +175,11 @@ section[id], main [id] { scroll-margin-top: calc(var(--header-h) + 16px); }
 
 .logo {
   display: block;
+  align-self: flex-end;  /* the bottom swash meets the header's bottom line, as in Figma */
   margin-right: auto;
   line-height: 0;
 }
-.logo img { width: clamp(132px, 14vw, 206px); height: auto; }
+.logo img { width: clamp(140px, 15.2vw, 228px); height: auto; }
 
 .wordmark {
   font-family: var(--font-serif);

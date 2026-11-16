@@ -176,6 +176,7 @@ section[id], main [id] { scroll-margin-top: calc(var(--header-h) + 16px); }
 .logo {
   display: block;
   align-self: flex-end;  /* the bottom swash meets the header's bottom line, as in Figma */
+  margin-left: -8px;
   margin-right: auto;
   line-height: 0;
 }

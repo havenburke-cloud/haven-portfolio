@@ -93,7 +93,6 @@ Open <http://localhost:8000> and stop the server with `Ctrl+C`. While `FORM_ENDP
 | Where | Placeholder | Replace with |
 | --- | --- | --- |
 | `index.html`, Consultation card | `20 minutes` and `$20` | Your call length and fee, if they change |
-| `index.html`, Confirmation | `[2 business days]` | Your real reply time |
 | `index.html`, Footer | `hello@yourdomain.com` (link and text) | The email you want public |
 | `index.html`, Footer | `https://instagram.com/yourhandle` | Your Instagram |
 | `index.html`, Footer | `https://tiktok.com/@yourhandle` | Your TikTok |

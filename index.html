@@ -12,12 +12,12 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Instrument+Serif&family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 
   <link rel="preload" as="image" href="images/intro-hands.jpg" fetchpriority="high">
-  <link rel="stylesheet" href="css/styles.css?v=16">
+  <link rel="stylesheet" href="css/styles.css?v=17">
   <link rel="stylesheet" href="css/lucky-slot.css?v=9">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
-  <a class="skip-link" href="#top">Skip intro</a>
+  <a class="skip-link" href="#about">Skip intro</a>
 
   <!-- ============ INTRO: five snapping screens (designed in Figma, "Hello!") ============
        Scroll, swipe or use the arrow keys to move through them; after the last
@@ -131,7 +131,7 @@
   <!-- ============ 1. NAV ============ -->
   <header class="site-header">
     <nav class="nav container" aria-label="Main">
-      <a class="logo" href="#top"><img src="images/haven-logo.png?v=2" width="681" height="246" alt="Haven"></a>
+      <a class="logo" href="#about"><img src="images/haven-logo.png?v=2" width="681" height="246" alt="Haven"></a>
 
       <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-links">
         <span class="nav__toggle-bars" aria-hidden="true"></span>
@@ -140,35 +140,27 @@
 
       <ul class="nav__links" id="nav-links">
         <li><a href="#about">About</a></li>
-        <li><a href="#book">Consultation</a></li>
+        <li><a href="#question">Ask a question</a></li>
       </ul>
 
-      <a class="btn btn--small" href="#quote" data-scroll-to-form>Get a quote</a>
+      <a class="btn btn--small" href="#book">Book a consultation</a>
     </nav>
   </header>
 
   <main id="main">
-
-    <!-- ============ 2. HERO ============ -->
-    <section class="hero" id="top" aria-labelledby="hero-title">
-      <div class="hero__inner container">
-        <p class="hero__kicker">Freelance Web Design</p>
-        <h1 class="hero__title" id="hero-title">Haven Burke</h1>
-      </div>
-    </section>
 
     <!-- ============ 5. ABOUT ============ -->
     <section class="section about" id="about" aria-labelledby="about-title">
       <div class="container about__inner">
         <header class="section-head section-head--left reveal">
           <p class="eyebrow">About</p>
-          <h2 class="section-title" id="about-title">Hi, I'm Haven.</h2>
+          <h1 class="section-title" id="about-title">Hi, I'm Haven.</h1>
         </header>
 
         <div class="about__body reveal">
           <p class="about__lead">I am a web designer with a degree in UX/UI design. I build digital products and services and have an eye for design.</p>
           <p>I would love to help expand your small business with eye-catching graphics and easy accessibility. Whether it’s showcasing your work in a portfolio or creating a booking site, I’ve got you!</p>
-          <a class="btn" href="#quote" data-scroll-to-form>Let's work together</a>
+          <a class="btn" href="#book">Let's work together</a>
         </div>
       </div>
     </section>
@@ -235,127 +227,9 @@
           </article>
         </div>
 
-        <p class="section-cta reveal">
-          Already know what you need?
-          <a class="text-link" href="#quote" data-scroll-to-form>Request a quote</a>
-        </p>
       </div>
     </section>
 
-    <!-- ============ 6. QUOTE FORM ============ -->
-    <section class="section quote" id="quote" aria-labelledby="quote-title">
-      <div class="container quote__inner">
-        <header class="section-head reveal">
-          <p class="eyebrow">Get a quote</p>
-          <h2 class="section-title" id="quote-title">Tell me about your project</h2>
-          <p class="section-intro">Share a few details and I'll get back to you with ideas and a quote. Fields marked <span class="req-mark" aria-hidden="true">*</span><span class="visually-hidden">with an asterisk</span> are required.</p>
-        </header>
-
-        <form class="quote-form" id="quote-form" novalidate>
-          <div class="form-error-summary" role="alert" data-form-alert hidden></div>
-
-          <!-- Spam trap: hidden from people, bots fill it in. -->
-          <div class="visually-hidden" aria-hidden="true">
-            <label for="_gotcha">Leave this field empty</label>
-            <input id="_gotcha" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
-          </div>
-
-          <div class="form-grid">
-            <div class="field">
-              <label for="name">Name <span class="req-mark" aria-hidden="true">*</span></label>
-              <input id="name" name="name" type="text" autocomplete="name" required aria-describedby="name-error">
-              <p class="field__error" id="name-error" data-error-for="name"></p>
-            </div>
-
-            <div class="field">
-              <label for="email">Email <span class="req-mark" aria-hidden="true">*</span></label>
-              <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-error">
-              <p class="field__error" id="email-error" data-error-for="email"></p>
-            </div>
-
-            <div class="field">
-              <label for="phone">Phone <span class="field__optional">(optional)</span></label>
-              <input id="phone" name="phone" type="tel" autocomplete="tel">
-            </div>
-
-            <div class="field">
-              <label for="business">Business name <span class="field__optional">(optional)</span></label>
-              <input id="business" name="business" type="text" autocomplete="organization">
-            </div>
-          </div>
-
-          <fieldset class="fieldset">
-            <legend>Where can I see you online? <span class="field__optional">(optional)</span></legend>
-            <div class="form-grid form-grid--3">
-              <div class="field">
-                <label for="instagram">Instagram</label>
-                <input id="instagram" name="instagram" type="text" placeholder="@yourhandle" autocapitalize="off" spellcheck="false">
-              </div>
-              <div class="field">
-                <label for="tiktok">TikTok</label>
-                <input id="tiktok" name="tiktok" type="text" placeholder="@yourhandle" autocapitalize="off" spellcheck="false">
-              </div>
-              <div class="field">
-                <label for="website">Current website</label>
-                <input id="website" name="website" type="text" inputmode="url" placeholder="yoursite.com" autocomplete="url" autocapitalize="off" spellcheck="false">
-              </div>
-            </div>
-          </fieldset>
-
-          <fieldset class="fieldset" id="tier-group" aria-describedby="tier-error">
-            <legend>Which tier? <span class="req-mark" aria-hidden="true">*</span><span class="visually-hidden">(required)</span></legend>
-            <div class="tier-options">
-              <label class="tier-option">
-                <input type="radio" name="tier" value="Portfolio Site" data-tier-value="portfolio" required>
-                <span>Portfolio Site</span>
-              </label>
-              <label class="tier-option">
-                <input type="radio" name="tier" value="Booking Site" data-tier-value="booking">
-                <span>Booking Site</span>
-              </label>
-              <label class="tier-option">
-                <input type="radio" name="tier" value="Custom" data-tier-value="custom">
-                <span>Custom</span>
-              </label>
-            </div>
-            <p class="field__error" id="tier-error" data-error-for="tier"></p>
-          </fieldset>
-
-          <div class="field">
-            <label for="details">What are you looking for? <span class="req-mark" aria-hidden="true">*</span></label>
-            <p class="field__hint" id="details-hint">A few sentences is perfect: what you do, what you want the site to do, and any sites you love.</p>
-            <textarea id="details" name="details" rows="6" required aria-describedby="details-hint details-error"></textarea>
-            <p class="field__error" id="details-error" data-error-for="details"></p>
-          </div>
-
-          <div class="field">
-            <span class="label" id="upload-label">Upload images of your work <span class="field__optional">(optional)</span></span>
-            <p class="field__hint" id="upload-hint">Up to 10 images, 10 MB each. JPG, PNG, WebP or HEIC.</p>
-            <div class="dropzone" data-dropzone>
-              <input class="dropzone__input visually-hidden" id="images" type="file" name="images" accept="image/*" multiple
-                     aria-labelledby="upload-label upload-button-text" aria-describedby="upload-hint images-error">
-              <label class="dropzone__label" for="images">
-                <span class="btn btn--outline btn--small" id="upload-button-text">Choose images</span>
-                <span class="dropzone__or">or drag them here</span>
-              </label>
-            </div>
-            <p class="field__error" id="images-error" data-error-for="images" aria-live="polite"></p>
-            <ul class="thumbs" data-thumbs aria-label="Selected images"></ul>
-          </div>
-
-          <div class="form-actions">
-            <button class="btn btn--large" type="submit" data-submit>Request a quote</button>
-          </div>
-        </form>
-
-        <div class="confirmation" data-confirmation hidden>
-          <h3 class="confirmation__title" tabindex="-1">Thank you, <span data-confirm-name>friend</span>!</h3>
-          <p>Your request is on its way. I'll read through everything and reply within <strong>[2 business days]</strong> to the email you gave me.</p>
-          <p class="confirmation__note" data-preview-note hidden>Preview mode: the form isn't connected to a backend yet, so nothing was actually sent. See the README to connect it.</p>
-          <button class="btn btn--outline" type="button" data-send-another>Send another request</button>
-        </div>
-      </div>
-    </section>
   </main>
 
   <!-- ============ 7. FOOTER ============ -->
@@ -378,6 +252,6 @@
   </footer>
 
   <script src="js/lucky-slot.js?v=9" defer></script>
-  <script src="js/main.js?v=16" defer></script>
+  <script src="js/main.js?v=17" defer></script>
 </body>
 </html>

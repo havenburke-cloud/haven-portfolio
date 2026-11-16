@@ -28,7 +28,7 @@ const IMAGE_MAX_PX = 2000;   // images are shrunk to this size in the browser be
 const MAX_TOTAL_MB = 30;     // total upload after shrinking (Google's limit is about 50 MB)
 
 /* Intro screens ("Hello!" → "I've got you."): how the snap feels */
-const INTRO_AXIS = 'y';          // 'y' = screens swipe up/down, 'x' = screens swipe sideways
+const INTRO_AXIS = 'x';          // 'x' = screens swipe sideways (next comes in from the right), 'y' = up/down
 const INTRO_DURATION_MS = 900;   // length of one swipe
 const INTRO_RECOIL = 4;          // how far (in % of the screen) it overshoots before settling back
 

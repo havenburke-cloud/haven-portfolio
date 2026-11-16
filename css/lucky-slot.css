@@ -1,0 +1,72 @@
+/* Lucky Tips nail slot machine (from lucky-tips-slot-machine.html).
+   On this site it sits inside the "Or maybe this?" intro screen and is scaled as one piece. */
+#lucky-slot {
+  --lts-pink: #e3307d; --lts-pink-deep: #a3134f; --lts-pink-soft: #fde4ef;
+  --lts-ink: #1b1519; --lts-muted: #6d6470; --lts-white: #ffffff;
+  --lts-body: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  --lts-display: "Gloock", "Didot", Georgia, serif;
+  --lts-mono: "DM Mono", ui-monospace, Menlo, monospace;
+  display: grid; justify-items: center; gap: 26px; width: 100%; max-width: 920px; margin: 0 auto;
+  color: var(--lts-ink); font-family: var(--lts-body); box-sizing: border-box;
+}
+#lucky-slot *, #lucky-slot *::before, #lucky-slot *::after { box-sizing: border-box; }
+#lucky-slot p { margin: 0; }
+#lucky-slot .lts-machine { position: relative; width: 100%; aspect-ratio: 1024 / 706; --cell: 150px; }
+#lucky-slot .lts-base { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; display: block; margin: 0; filter: drop-shadow(0 26px 22px rgba(130, 20, 70, .22)) drop-shadow(0 6px 6px rgba(130, 20, 70, .14)); pointer-events: none; user-select: none; -webkit-user-drag: none; }
+#lucky-slot .lts-reel { position: absolute; overflow: hidden; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+#lucky-slot .lts-reel::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(180deg, rgba(80, 50, 65, .34) 0%, rgba(80, 50, 65, .1) 12%, rgba(255, 255, 255, 0) 26%,
+    rgba(255, 255, 255, 0) 74%, rgba(80, 50, 65, .1) 88%, rgba(80, 50, 65, .34) 100%); }
+#lucky-slot .lts-reel::before { content: ""; position: absolute; inset: 0; z-index: 3; background: rgba(227, 48, 125, 0); transition: background .2s; pointer-events: none; }
+#lucky-slot .lts-reel.lts-held::before { background: rgba(227, 48, 125, .14); }
+#lucky-slot .lts-strip { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
+#lucky-slot .lts-cell { height: var(--cell); display: flex; align-items: center; justify-content: center; }
+#lucky-slot .lts-cell img { height: calc(var(--cell) * .66); width: auto; max-width: 78%; object-fit: contain; margin: 0; filter: drop-shadow(0 6px 7px rgba(40, 20, 30, .18)); user-select: none; -webkit-user-drag: none; }
+
+#lucky-slot .lts-bulb, #lucky-slot .lts-beacon { position: absolute; pointer-events: none; border-radius: 50%; opacity: 0; transition: opacity .3s; }
+#lucky-slot .lts-bulb { width: 4.4%; aspect-ratio: 2 / 1; transform: translate(-50%, -50%); background: radial-gradient(closest-side, #fff 0 35%, rgba(255, 220, 238, .8) 55%, rgba(255, 160, 205, 0)); }
+#lucky-slot .lts-beacon { left: 43.4%; top: 3.2%; width: 10.2%; height: 9.6%; background: radial-gradient(closest-side, rgba(255, 90, 80, .95), rgba(255, 60, 60, .45) 55%, rgba(255, 40, 40, 0)); mix-blend-mode: screen; }
+#lucky-slot.lts-spinning .lts-bulb { animation: lts-twinkle .5s steps(1) infinite; }
+#lucky-slot.lts-spinning .lts-bulb:nth-of-type(even) { animation-delay: .25s; }
+#lucky-slot.lts-spinning .lts-beacon { animation: lts-beacon .4s ease-in-out infinite alternate; }
+#lucky-slot.lts-win .lts-bulb, #lucky-slot.lts-win .lts-beacon { opacity: 1; }
+@keyframes lts-twinkle { 0% { opacity: 1; } 50% { opacity: .1; } }
+@keyframes lts-beacon { from { opacity: .25; } to { opacity: 1; } }
+
+#lucky-slot .lts-lever { position: absolute; left: 91.80%; top: 18.41%; width: 9.77%; height: 29.18%; padding: 0; margin: 0; border: 0; background: none; cursor: pointer; transform-origin: 35% 100%; transition: transform .25s; }
+#lucky-slot .lts-lever svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; filter: drop-shadow(0 14px 10px rgba(130, 20, 70, .2)); }
+#lucky-slot .lts-lever:hover { transform: rotate(-4deg); }
+#lucky-slot .lts-lever.lts-pulled { animation: lts-pull .7s cubic-bezier(.3, .7, .3, 1); }
+@keyframes lts-pull { 0% { transform: scaleY(1); } 35% { transform: scaleY(-.85); } 60% { transform: scaleY(-.85); } 100% { transform: scaleY(1); } }
+
+#lucky-slot .lts-holds { position: relative; width: 100%; height: 38px; margin-top: -10px; }
+#lucky-slot .lts-hold { position: absolute; top: 0; height: 100%; margin: 0; padding: 0;
+  font: 700 12px var(--lts-body); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; overflow: hidden;
+  border-radius: 999px; border: 2px solid var(--lts-pink); background: var(--lts-white); color: var(--lts-pink-deep); cursor: pointer;
+  transition: background .15s, color .15s; }
+#lucky-slot .lts-hold:hover { background: var(--lts-pink-soft); }
+#lucky-slot .lts-hold[aria-pressed="true"] { background: var(--lts-pink); color: var(--lts-white); }
+#lucky-slot .lts-hold:disabled { opacity: .5; cursor: default; }
+
+#lucky-slot .lts-controls { display: grid; justify-items: center; gap: 8px; }
+#lucky-slot .lts-spin { font: 800 17px var(--lts-body); letter-spacing: .14em; text-transform: uppercase;
+  padding: 16px 60px; margin: 0; border-radius: 999px; border: 0; cursor: pointer; color: var(--lts-white);
+  background: linear-gradient(180deg, #f2549a, var(--lts-pink) 55%, #c71f68);
+  box-shadow: 0 5px 0 var(--lts-pink-deep), 0 12px 24px -10px rgba(163, 19, 79, .6);
+  transition: transform .08s, box-shadow .08s; }
+#lucky-slot .lts-spin:hover { transform: translateY(-1px); }
+#lucky-slot .lts-spin:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--lts-pink-deep); }
+#lucky-slot .lts-spin:disabled { opacity: .7; cursor: wait; }
+#lucky-slot .lts-count { font-family: var(--lts-mono); font-size: 12px; color: var(--lts-muted); }
+#lucky-slot .lts-result { display: grid; justify-items: center; text-align: center; gap: 6px; max-width: 62ch; min-height: 76px; }
+#lucky-slot .lts-verdict { font-family: var(--lts-display); font-size: 26px; line-height: 1.2; }
+#lucky-slot.lts-win .lts-verdict { color: var(--lts-pink); }
+#lucky-slot .lts-names { font-size: 13px; color: var(--lts-muted); text-wrap: balance; }
+#lucky-slot .lts-book { margin-top: 4px; font: 700 13px var(--lts-body); color: var(--lts-pink-deep); text-decoration: underline; text-underline-offset: 3px; }
+#lucky-slot [hidden] { display: none !important; }
+#lucky-slot :focus-visible { outline: 2px solid var(--lts-pink); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  #lucky-slot.lts-spinning .lts-bulb, #lucky-slot.lts-spinning .lts-beacon { animation: none; opacity: 1; }
+  #lucky-slot .lts-lever.lts-pulled { animation: none; }
+}

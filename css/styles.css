@@ -1119,6 +1119,28 @@ textarea:focus-visible {
 .intro__slide--maybe .intro__line { left: 5.9%; top: 50.2%; transform: translateY(-50%); font-size: 6.7cqw; line-height: 1.12; }
 .intro__slide--maybe .intro__img  { left: 34.03%; top: 13.18%; width: 63.19%; }
 
+/* Live Lucky Tips slot machine: laid out at 860px wide, then scaled as one piece
+   to fit this box (js/main.js sets the scale). Placed where the machine sits in Figma. */
+.intro__slot {
+  position: absolute;
+  left: 34.4%;
+  top: 14.2%;
+  width: 60.5%;
+  z-index: 2;
+}
+.intro__slot-inner {
+  width: var(--slot-layout-width, 860px); /* phones use a narrower layout so buttons stay readable */
+  transform-origin: 0 0;
+}
+.intro__slot #lucky-slot .lts-result { display: none; } /* the result text isn't part of the Figma screen */
+.js .intro__slots-static { display: none; }
+html:not(.js) .intro__slot { display: none; }
+
+/* "this?" turns red once each swipe has settled (js/main.js adds .is-settled) */
+.intro__this { transition: color .6s ease; }
+.intro.is-snapping .intro__slide.is-settled .intro__this,
+.intro:not(.is-snapping) .intro__this { color: #b52137; }
+
 /* 4. How about this? */
 .intro__slide--how .intro__line { left: 50.3%; top: 46.4%; transform: translate(-50%, -50%); font-size: 6.2cqw; }
 .intro__slide--how .intro__img--left  { left: 0; top: 0; width: 33.19%; }
@@ -1166,6 +1188,7 @@ textarea:focus-visible {
   .intro__slide--looking .intro__img  { left: 50%; top: auto; bottom: 0; width: auto; height: 62%; transform: translateX(-50%); }
 
   .intro__slide--maybe .intro__line { left: 8%; top: 17%; transform: none; font-size: 15cqw; }
+  .intro__slide--maybe .intro__slot { left: 50%; top: auto; bottom: 9%; width: min(100%, 62vh); transform: translateX(-50%); --slot-layout-width: 600px; }
   .intro__slide--maybe .intro__img  { left: 50%; top: auto; bottom: 7%; width: min(96%, 70vh); transform: translateX(-50%); }
 
   .intro__slide--how .intro__line {

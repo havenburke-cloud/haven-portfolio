@@ -40,6 +40,7 @@ const SLIDE_INTERVAL_MS = 4000;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 document.addEventListener('DOMContentLoaded', () => {
+  initSlotFit();
   initIntro();
   initHeader();
   initNav();
@@ -80,7 +81,15 @@ function initIntro() {
   const deepLink = location.hash && location.hash !== '#intro';
   if (!deepLink) window.scrollTo(0, 0);
   let index = deepLink ? last : 0;
-  slides[index].classList.add('is-current');
+  slides[index].classList.add('is-current', 'is-settled');
+
+  // Runs once a swipe (including its recoil) has fully finished.
+  function settled(slide) {
+    slide.classList.add('is-settled'); // turns "this?" red
+    if (slide.matches('.intro__slide--maybe') && window.luckySlot && !window.luckySlot.isSpinning()) {
+      setTimeout(() => window.luckySlot.spin(), 150); // the slot machine spins by itself
+    }
+  }
 
   let animating = false;
   let locked = false;      // ignore the tail of a scroll gesture (trackpad momentum)
@@ -99,6 +108,8 @@ function initIntro() {
     animating = true;
     const from = slides[index];
     const next = slides[to];
+    from.classList.remove('is-settled');
+    next.classList.remove('is-settled');
     next.classList.add('is-incoming');
 
     // Swipe in, overshoot by INTRO_RECOIL %, then settle back: the "recoil".
@@ -128,6 +139,7 @@ function initIntro() {
       next.getAnimations().forEach((a) => a.cancel());
       index = to;
       animating = false;
+      settled(next);
       scheduleUnlock();
     };
     outAnim.finished.then(finish, finish);
@@ -219,11 +231,27 @@ function initIntro() {
   // Links back to the very top (e.g. the "Haven" wordmark when it points at #intro) restart the intro.
   window.addEventListener('hashchange', () => {
     if (location.hash === '#intro') {
-      slides[index].classList.remove('is-current');
+      slides[index].classList.remove('is-current', 'is-settled');
       index = 0;
-      slides[0].classList.add('is-current');
+      slides[0].classList.add('is-current', 'is-settled');
     }
   });
+}
+
+/* ---------- Slot machine: scale the 860px-wide machine to fit its box ---------- */
+function initSlotFit() {
+  const box = document.querySelector('[data-slot-fit]');
+  const inner = box && box.querySelector('[data-slot-inner]');
+  if (!inner) return;
+  const fit = () => {
+    const scale = box.clientWidth / inner.offsetWidth; // layout width comes from CSS (--slot-layout-width)
+    inner.style.transform = `scale(${scale})`;
+    box.style.height = `${inner.offsetHeight * scale}px`;
+  };
+  fit();
+  window.addEventListener('resize', fit);
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(inner);
+  if (document.fonts) document.fonts.ready.then(fit);
 }
 
 /* ---------- Header: hairline border once the page scrolls ---------- */

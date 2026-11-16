@@ -9,10 +9,11 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Instrument+Serif&family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 
   <link rel="preload" as="image" href="images/intro-hands.jpg" fetchpriority="high">
-  <link rel="stylesheet" href="css/styles.css?v=8">
+  <link rel="stylesheet" href="css/styles.css?v=9">
+  <link rel="stylesheet" href="css/lucky-slot.css?v=9">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -32,7 +33,7 @@
 
     <div class="intro__slide intro__slide--looking" data-slide>
       <div class="intro__frame">
-        <p class="intro__line">Looking for this?</p>
+        <p class="intro__line">Looking for <span class="intro__this">this?</span></p>
         <img class="intro__img" src="images/intro-face.jpg" width="1900" height="1270"
              alt="A woman with blonde curtain bangs looking upward, wearing dramatic wispy false lashes.">
       </div>
@@ -40,9 +41,60 @@
 
     <div class="intro__slide intro__slide--maybe" data-slide>
       <div class="intro__frame">
-        <p class="intro__line">Or maybe<br>this?</p>
-        <img class="intro__img" src="images/intro-slots.jpg" width="1600" height="1432"
+        <p class="intro__line">Or maybe<br><span class="intro__this">this?</span></p>
+        <!-- Shown only if JavaScript is off -->
+        <img class="intro__img intro__slots-static" src="images/intro-slots.jpg" width="1600" height="1432"
              alt="A pink slot machine whose reels are filled with nail designs, with thumb, index, middle, ring and pinky labels and a spin button.">
+        <!-- Lucky Tips slot machine: spins by itself when this screen settles (js/lucky-slot.js) -->
+        <div class="intro__slot" data-slot-fit>
+          <div class="intro__slot-inner" data-slot-inner>
+            <div id="lucky-slot" class="lts-area">
+              <div class="lts-machine" id="lts-machine">
+                <img class="lts-base" id="lts-base" alt="Pink five-drum slot machine">
+                <div id="lts-reels"></div>
+                <span class="lts-beacon" aria-hidden="true"></span>
+                <span class="lts-bulb" style="left:14.6%;top:14%" aria-hidden="true"></span>
+                <span class="lts-bulb" style="left:32.2%;top:14%" aria-hidden="true"></span>
+                <span class="lts-bulb" style="left:64.9%;top:14%" aria-hidden="true"></span>
+                <span class="lts-bulb" style="left:83%;top:14%" aria-hidden="true"></span>
+                <span class="lts-bulb" style="left:14.6%;top:97.2%" aria-hidden="true"></span>
+                <span class="lts-bulb" style="left:32.2%;top:97.2%" aria-hidden="true"></span>
+                <span class="lts-bulb" style="left:64.9%;top:97.2%" aria-hidden="true"></span>
+                <span class="lts-bulb" style="left:83%;top:97.2%" aria-hidden="true"></span>
+                <button class="lts-lever" id="lts-lever" type="button" aria-label="Pull the lever to spin">
+                  <svg viewBox="940 130 100 206" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="ltsGold" x1="0" x2="1" y1="0" y2="0">
+                        <stop offset="0" stop-color="#6b4a14"/><stop offset=".28" stop-color="#c9a24a"/>
+                        <stop offset=".48" stop-color="#fff1bf"/><stop offset=".7" stop-color="#d4ad55"/>
+                        <stop offset="1" stop-color="#5e3f10"/>
+                      </linearGradient>
+                      <radialGradient id="ltsBall" cx=".36" cy=".3" r=".75">
+                        <stop offset="0" stop-color="#ffb3d2"/><stop offset=".28" stop-color="#f0478f"/>
+                        <stop offset=".7" stop-color="#d8216f"/><stop offset="1" stop-color="#8c0c41"/>
+                      </radialGradient>
+                    </defs>
+                    <path d="M980.2 204 L991.6 204 L981.4 336 L969.4 336 Z" fill="url(#ltsGold)" stroke="#3b2a0e" stroke-width="1.6" stroke-linejoin="round"/>
+                    <circle cx="990" cy="175" r="36" fill="url(#ltsBall)" stroke="#5a0a2c" stroke-width="2.2"/>
+                    <ellipse cx="977" cy="158" rx="12" ry="6.5" fill="#fff" opacity=".75" transform="rotate(-24 977 158)"/>
+                    <circle cx="994" cy="152" r="2.6" fill="#fff" opacity=".6"/>
+                    <path d="M962 192 A30 30 0 0 0 1006 203" fill="none" stroke="#ff9cc6" stroke-width="2" opacity=".45"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="lts-holds" id="lts-holds"></div>
+              <div class="lts-controls">
+                <button class="lts-spin" id="lts-spin" type="button">Spin</button>
+                <span class="lts-count" id="lts-count">Spin 0</span>
+              </div>
+              <div class="lts-result" aria-live="polite">
+                <p class="lts-verdict" id="lts-verdict">Your set is on the line.</p>
+                <p class="lts-names" id="lts-names"></p>
+                <a class="lts-book" id="lts-book" href="#" hidden>Book this set</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -50,7 +102,7 @@
       <div class="intro__frame">
         <img class="intro__img intro__img--left" src="images/intro-hair-left.jpg" width="900" height="1928"
              alt="A long, curled blonde hair extension.">
-        <p class="intro__line">How about this?</p>
+        <p class="intro__line">How about <span class="intro__this">this?</span></p>
         <img class="intro__img intro__img--right" src="images/intro-hair-right.jpg" width="900" height="1994" alt="">
       </div>
     </div>
@@ -446,6 +498,7 @@
     </div>
   </footer>
 
-  <script src="js/main.js?v=8" defer></script>
+  <script src="js/lucky-slot.js?v=9" defer></script>
+  <script src="js/main.js?v=9" defer></script>
 </body>
 </html>

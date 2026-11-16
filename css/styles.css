@@ -1215,10 +1215,10 @@ html:not(.js) .intro__slot { display: none; }
 }
 
 /* Header button: one line; on small phones it just says "Book" */
-.nav__cta { white-space: nowrap; }
+.nav__cta { white-space: nowrap; gap: .28em; }
 @media (max-width: 420px) { .nav__cta-more { display: none; } }
 /* ---------- About buttons ---------- */
-.about__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 1rem; }
+.about__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: clamp(2rem, 4vw, 3rem); }
 .about__body .about__actions .btn { margin-top: 0; }
 
 /* ---------- AI policy pop-up ---------- */

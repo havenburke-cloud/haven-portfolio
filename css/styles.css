@@ -1137,7 +1137,7 @@ textarea:focus-visible {
 html:not(.js) .intro__slot { display: none; }
 
 /* "this?" turns red once each swipe has settled (js/main.js adds .is-settled) */
-.intro__this { transition: color .6s ease; }
+.intro__this { transition: color .2s ease; }
 .intro.is-snapping .intro__slide.is-settled .intro__this,
 .intro:not(.is-snapping) .intro__this { color: #b52137; }
 

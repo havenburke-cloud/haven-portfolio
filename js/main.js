@@ -42,6 +42,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 document.addEventListener('DOMContentLoaded', () => {
   initSlotFit();
   initIntro();
+  initIntroOneWay();
   initEyes();
   initHeader();
   initNav();
@@ -178,7 +179,7 @@ function initIntro() {
   }
 
   // Should the intro handle a move in this direction right now?
-  const wants = (dir) => atTop() && (dir > 0 ? index < last : index > 0);
+  const wants = (dir) => !intro.hidden && atTop() && (dir > 0 ? index < last : index > 0);
 
   /* Mouse wheel / trackpad */
   window.addEventListener('wheel', (e) => {
@@ -257,6 +258,38 @@ function initIntro() {
       index = 0;
       slides[0].classList.add('is-current', 'is-settled');
     }
+  });
+}
+
+/* ---------- The intro only plays once per visit ----------
+   As soon as the visitor has scrolled completely past the intro, it is removed,
+   so scrolling up stops at About. Reloading the page brings it back. */
+function initIntroOneWay() {
+  const intro = document.querySelector('[data-intro]');
+  if (!intro) return;
+
+  function collapse() {
+    if (intro.hidden) return;
+    const h = intro.offsetHeight;
+    const y = window.scrollY;
+    intro.hidden = true;
+    window.scrollTo({ top: Math.max(0, y - h), behavior: 'instant' }); // keep the same content in view
+  }
+
+  const check = () => {
+    if (!intro.hidden && window.scrollY >= intro.offsetHeight) collapse();
+  };
+  window.addEventListener('scroll', check, { passive: true });
+  window.addEventListener('load', check, { once: true }); // e.g. arriving on a #section link
+
+  // "Skip intro" goes straight to About without playing the rest.
+  document.querySelectorAll('.skip-link[href="#about"]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      collapse();
+      document.getElementById('about').scrollIntoView({ behavior: 'instant' });
+      document.getElementById('about').focus?.({ preventScroll: true });
+    });
   });
 }
 

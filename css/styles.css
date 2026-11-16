@@ -572,7 +572,7 @@ html:not(.js) .nav__links {
   max-width: 1000px;
 }
 
-.about__body { max-width: 38rem; }
+.about__body { max-width: 38rem; margin-top: clamp(24px, 3vw, 40px); }
 .about__body p { color: var(--ink-soft); }
 .about__lead {
   font-family: var(--font-serif);
@@ -584,8 +584,11 @@ html:not(.js) .nav__links {
 .about__body .btn { margin-top: 1rem; }
 
 @media (min-width: 900px) {
-  .about__inner { grid-template-columns: 1fr 1.6fr; gap: 64px; }
-  .about .section-head { margin-bottom: 0; }
+  /* Heading top-left; photo below it; text in the right column starting level with the photo */
+  .about__inner { grid-template-columns: 1fr 1.6fr; column-gap: 64px; row-gap: 0; }
+  .about .section-head { grid-column: 1; grid-row: 1; margin-bottom: 0; }
+  .about .about__photo { grid-column: 1; grid-row: 2; }
+  .about .about__body { grid-column: 2; grid-row: 2; align-self: start; margin-top: clamp(24px, 3vw, 40px); }
 }
 
 /* ---------- Quote form ---------- */
@@ -1285,3 +1288,7 @@ html:not(.js) .intro__slot { display: none; }
   margin-top: clamp(24px, 3vw, 40px);
   border-radius: var(--radius);
 }
+
+/* Footer logo (same image as the header) */
+.footer__logo { display: inline-block; line-height: 0; margin-bottom: 8px; }
+.footer__logo img { width: clamp(150px, 14vw, 200px); height: auto; }

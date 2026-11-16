@@ -1213,3 +1213,7 @@ html:not(.js) .intro__slot { display: none; }
 @media (max-aspect-ratio: 1/1) and (max-width: 480px) {
   .intro__box { border-width: 1.5px; }
 }
+
+/* Header button: one line; on small phones it just says "Book" */
+.nav__cta { white-space: nowrap; }
+@media (max-width: 420px) { .nav__cta-more { display: none; } }

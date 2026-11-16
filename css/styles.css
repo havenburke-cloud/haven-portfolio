@@ -1052,13 +1052,12 @@ textarea:focus-visible {
 }
 
 /* 1. Hello! */
-.intro__slide--hello .intro__line { left: 50%; top: 24.6%; transform: translate(-50%, -50%); font-size: 8.1cqw; }
-.intro__slide--hello .intro__img  {
-  left: 0; top: 32.2%; width: 100%;
-  /* fade the photo's top edge into the grey so there's no visible seam */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 14%);
-}
+/* Hands fill the frame from the top (image is the full 1440 × 1016 Figma frame); "Hello!" sits lower left */
+.intro__slide--hello .intro__line { left: 14.5%; top: 76.9%; transform: translateY(-50%); font-size: 8.1cqw; }
+.intro__slide--hello .intro__img  { left: 0; top: 0; width: 100%; }
+/* On screens wider than the design, trim from the top (the arms already run off it)
+   so the nail tips at the bottom always show. */
+.intro__slide--hello .intro__frame { top: auto; bottom: 0; transform: translateX(-50%); }
 
 /* 2. Looking for this? */
 .intro__slide--looking .intro__line { left: 50%; top: 19.4%; transform: translate(-50%, -50%); font-size: 6.8cqw; }
@@ -1186,8 +1185,9 @@ html:not(.js) .intro__slot { display: none; }
   .intro__slide--maybe .intro__frame,
   .intro__slide--got .intro__frame { width: auto; }
 
-  .intro__slide--hello .intro__line { top: 21%; font-size: 17cqw; }
-  .intro__slide--hello .intro__img  { left: 50%; top: auto; bottom: 0; width: auto; height: 46%; transform: translateX(-50%); }
+  .intro__slide--hello .intro__frame { inset: 0; transform: none; }
+  .intro__slide--hello .intro__line { left: 9%; top: auto; bottom: 13%; transform: none; font-size: 17cqw; }
+  .intro__slide--hello .intro__img  { left: 50%; top: 0; width: auto; height: 68%; transform: translateX(-50%); }
 
   .intro__slide--looking .intro__line { top: 17%; font-size: 12.5cqw; }
   .intro__slide--looking .intro__face { left: 50%; top: auto; bottom: 0; width: auto; height: 62%; transform: translateX(-50%); }

@@ -1026,3 +1026,163 @@ textarea:focus-visible {
   font: inherit;
   cursor: pointer;
 }
+
+/* ==========================================================================
+   INTRO: "Hello!" → "I've got you." (five snapping screens)
+   Positions come from the 1440 × 1024 Figma frames: on landscape screens each
+   slide is a scaled copy of the frame (sizes in cqw = % of frame width), cropped
+   to cover the screen. Portrait screens (phones) get their own layout below.
+   Without JavaScript, or with reduced motion, the screens simply stack.
+   ========================================================================== */
+.intro {
+  --intro-ink: #0e0e0e;
+  position: relative;
+  background: #fff;
+}
+
+.intro__slide {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--slide-bg, #fff);
+}
+.intro__slide--hello { --slide-bg: #eef0f3; } /* sampled from the Figma frame */
+
+/* Stacked, snapping mode (turned on by js/main.js) */
+.intro.is-snapping {
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+.intro.is-snapping .intro__slide {
+  position: absolute;
+  inset: 0;
+  height: auto;
+  visibility: hidden;
+  z-index: 1;
+  will-change: transform;
+}
+.intro.is-snapping .intro__slide.is-current { visibility: visible; z-index: 2; }
+.intro.is-snapping .intro__slide.is-incoming { visibility: visible; z-index: 3; }
+
+/* The scaled 1440 × 1024 design frame */
+.intro__frame {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 140.625svh); /* 1440 / 1024 = 1.40625 */
+  aspect-ratio: 1440 / 1024;
+  transform: translate(-50%, -50%);
+  container-type: inline-size;
+}
+
+.intro__line {
+  position: absolute;
+  margin: 0;
+  font-family: "Instrument Serif", "Times New Roman", serif;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  color: var(--intro-ink);
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.intro__img {
+  position: absolute;
+  display: block;
+  max-width: none;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* 1. Hello! */
+.intro__slide--hello .intro__line { left: 50%; top: 24.6%; transform: translate(-50%, -50%); font-size: 8.1cqw; }
+.intro__slide--hello .intro__img  {
+  left: 0; top: 32.2%; width: 100%;
+  /* fade the photo's top edge into the grey so there's no visible seam */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 14%);
+}
+
+/* 2. Looking for this? */
+.intro__slide--looking .intro__line { left: 50%; top: 19.4%; transform: translate(-50%, -50%); font-size: 6.8cqw; }
+.intro__slide--looking .intro__img  {
+  left: 12.15%; top: 25.6%; width: 79.17%;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 9%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 9%);
+}
+
+/* 3. Or maybe this? */
+.intro__slide--maybe .intro__line { left: 5.9%; top: 50.2%; transform: translateY(-50%); font-size: 6.7cqw; line-height: 1.12; }
+.intro__slide--maybe .intro__img  { left: 34.03%; top: 13.18%; width: 63.19%; }
+
+/* 4. How about this? */
+.intro__slide--how .intro__line { left: 50.3%; top: 46.4%; transform: translate(-50%, -50%); font-size: 6.2cqw; }
+.intro__slide--how .intro__img--left  { left: 0; top: 0; width: 33.19%; }
+.intro__slide--how .intro__img--right { left: 67.92%; top: 0; width: 32.08%; }
+
+/* 5. I've got you. */
+.intro__slide--got .intro__line { left: 50%; top: 46.9%; transform: translate(-50%, -50%); font-size: 6.3cqw; }
+.intro__box {
+  position: relative;
+  display: inline-block;
+  padding: .26em .36em .3em;
+  border: max(1.5px, .14cqw) dashed var(--intro-ink);
+}
+.intro__cursor {
+  position: absolute;
+  left: calc(100% + .1em);
+  top: calc(100% - .02em);
+  width: .62em;
+  height: .62em;
+  overflow: visible;
+}
+
+/* White-background screens scale to fit (never crop the SPIN button or the box);
+   photo screens above scale to fill. */
+.intro__slide--maybe .intro__frame,
+.intro__slide--got .intro__frame { width: min(100%, 140.625svh); }
+
+/* ---------- Portrait screens (phones, tall tablets) ---------- */
+@media (max-aspect-ratio: 1/1) {
+  .intro__frame {
+    inset: 0;
+    width: auto;
+    aspect-ratio: auto;
+    transform: none;
+  }
+  .intro__slide--maybe .intro__frame,
+  .intro__slide--got .intro__frame { width: auto; }
+
+  .intro__slide--hello .intro__line { top: 21%; font-size: 17cqw; }
+  .intro__slide--hello .intro__img  { left: 50%; top: auto; bottom: 0; width: auto; height: 46%; transform: translateX(-50%); }
+
+  .intro__slide--looking .intro__line { top: 17%; font-size: 12.5cqw; }
+  .intro__slide--looking .intro__img  { left: 50%; top: auto; bottom: 0; width: auto; height: 64%; transform: translateX(-50%); }
+
+  .intro__slide--maybe .intro__line { left: 8%; top: 17%; transform: none; font-size: 15cqw; }
+  .intro__slide--maybe .intro__img  { left: 50%; top: auto; bottom: 7%; width: min(96%, 70vh); transform: translateX(-50%); }
+
+  .intro__slide--how .intro__line {
+    top: 50%;
+    width: 42%;
+    font-size: 11cqw;
+    line-height: 1.05;
+    text-align: center;
+    white-space: normal;
+  }
+  .intro__slide--how .intro__img--left,
+  .intro__slide--how .intro__img--right { top: 0; width: auto; height: 100%; }
+  .intro__slide--how .intro__img--left  { left: 0; transform: translateX(-70%); }
+  .intro__slide--how .intro__img--right { left: auto; right: 0; transform: translateX(70%); }
+
+  .intro__slide--got .intro__line { font-size: 13cqw; }
+}
+
+/* Keep phones' cursor and box readable */
+@media (max-aspect-ratio: 1/1) and (max-width: 480px) {
+  .intro__box { border-width: 1.5px; }
+}

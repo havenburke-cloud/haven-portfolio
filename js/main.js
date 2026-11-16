@@ -27,6 +27,11 @@ const MAX_FILE_MB = 10;      // per image, before shrinking
 const IMAGE_MAX_PX = 2000;   // images are shrunk to this size in the browser before sending
 const MAX_TOTAL_MB = 30;     // total upload after shrinking (Google's limit is about 50 MB)
 
+/* Intro screens ("Hello!" → "I've got you."): how the snap feels */
+const INTRO_AXIS = 'y';          // 'y' = screens swipe up/down, 'x' = screens swipe sideways
+const INTRO_DURATION_MS = 900;   // length of one swipe
+const INTRO_RECOIL = 4;          // how far (in % of the screen) it overshoots before settling back
+
 /* Work showcase: time each screenshot stays on screen */
 const SLIDE_INTERVAL_MS = 4000;
 
@@ -35,6 +40,7 @@ const SLIDE_INTERVAL_MS = 4000;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 document.addEventListener('DOMContentLoaded', () => {
+  initIntro();
   initHeader();
   initNav();
   initReveal();
@@ -47,6 +53,174 @@ document.addEventListener('DOMContentLoaded', () => {
   const year = document.querySelector('[data-year]');
   if (year) year.textContent = new Date().getFullYear();
 });
+
+/* ---------- Intro: snapping swipe between the five screens ----------
+   While the intro fills the screen (page scrolled to the very top), each scroll
+   gesture, swipe or arrow key moves exactly one screen, with a slight overshoot
+   and spring back. Past the last screen the page scrolls normally; scrolling back
+   up to the top steps back through the screens. */
+function initIntro() {
+  const intro = document.querySelector('[data-intro]');
+  if (!intro || reduceMotion.matches) return; // reduced motion: screens just stack and scroll normally
+  const slides = Array.from(intro.querySelectorAll('[data-slide]'));
+  const last = slides.length - 1;
+  if (last < 1) return;
+
+  intro.classList.add('is-snapping');
+
+  // Get every screen's photo fully ready now, so no screen flashes blank mid-swipe.
+  intro.querySelectorAll('img').forEach((img) => {
+    img.loading = 'eager';
+    if (img.decode) img.decode().catch(() => {});
+  });
+
+  // Arriving mid-page (refresh or a #link): show the last screen, ready to scroll back through.
+  let index = window.scrollY > 4 || location.hash ? last : 0;
+  slides[index].classList.add('is-current');
+
+  let animating = false;
+  let locked = false;      // ignore the tail of a scroll gesture (trackpad momentum)
+  let lastWheel = 0;
+  let lastDelta = 0;
+  let unlockTimer = null;
+
+  const atTop = () => window.scrollY <= 2;
+  const QUIET_MS = 180;    // a gesture is over once the wheel has been quiet this long
+
+  const tf = (v) => (INTRO_AXIS === 'x' ? `translate3d(${v}%,0,0)` : `translate3d(0,${v}%,0)`);
+
+  function go(dir) {
+    const to = index + dir;
+    if (animating || to < 0 || to > last) return;
+    animating = true;
+    const from = slides[index];
+    const next = slides[to];
+    next.classList.add('is-incoming');
+
+    // Swipe in, overshoot by INTRO_RECOIL %, then settle back: the "recoil".
+    const SNAP = 'cubic-bezier(.77, 0, .18, 1)';
+    const SETTLE = 'cubic-bezier(.3, 0, .25, 1)';
+    const timing = { duration: INTRO_DURATION_MS, fill: 'both' };
+    const r = INTRO_RECOIL;
+    const outAnim = from.animate([
+      { transform: tf(0), easing: SNAP },
+      { transform: tf(-dir * (100 + r)), offset: 0.7, easing: SETTLE },
+      { transform: tf(-dir * 100) },
+    ], timing);
+    next.animate([
+      { transform: tf(dir * 100), easing: SNAP },
+      { transform: tf(-dir * r), offset: 0.7, easing: SETTLE },
+      { transform: tf(0) },
+    ], timing);
+
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      from.classList.remove('is-current');
+      next.classList.remove('is-incoming');
+      next.classList.add('is-current');
+      from.getAnimations().forEach((a) => a.cancel());
+      next.getAnimations().forEach((a) => a.cancel());
+      index = to;
+      animating = false;
+      scheduleUnlock();
+    };
+    outAnim.finished.then(finish, finish);
+    setTimeout(finish, INTRO_DURATION_MS + 150); // backup, in case the browser pauses animations
+  }
+
+  function scheduleUnlock() {
+    clearTimeout(unlockTimer);
+    unlockTimer = setTimeout(() => {
+      if (animating) return scheduleUnlock();
+      if (performance.now() - lastWheel < QUIET_MS) return scheduleUnlock();
+      locked = false;
+    }, QUIET_MS);
+  }
+
+  // Should the intro handle a move in this direction right now?
+  const wants = (dir) => atTop() && (dir > 0 ? index < last : index > 0);
+
+  /* Mouse wheel / trackpad */
+  window.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) return; // pinch-zoom
+    const delta = INTRO_AXIS === 'x' && Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    if (Math.abs(delta) < 1) return;
+    const dir = delta > 0 ? 1 : -1;
+    if (!wants(dir)) return;
+    e.preventDefault();
+
+    const now = performance.now();
+    // A sharp new push after a pause-free stream still counts as a new gesture.
+    const newImpulse = Math.abs(delta) > 40 && Math.abs(delta) > Math.abs(lastDelta) * 1.8;
+    lastWheel = now;
+    lastDelta = delta;
+
+    if (animating) return;
+    if (locked && !newImpulse) { scheduleUnlock(); return; }
+    locked = true;
+    go(dir);
+    scheduleUnlock();
+  }, { passive: false });
+
+  /* Touch swipes */
+  let touch = null;
+  window.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) { touch = null; return; }
+    touch = { x: e.touches[0].clientX, y: e.touches[0].clientY, handled: null };
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!touch) return;
+    const dx = touch.x - e.touches[0].clientX;
+    const dy = touch.y - e.touches[0].clientY;
+    if (touch.handled === null && Math.max(Math.abs(dx), Math.abs(dy)) > 6) {
+      const d = INTRO_AXIS === 'x' && Math.abs(dx) > Math.abs(dy) ? dx : dy;
+      touch.handled = wants(d > 0 ? 1 : -1);
+    }
+    if (touch.handled) e.preventDefault(); // stop the page scrolling while the intro swipes
+  }, { passive: false });
+
+  window.addEventListener('touchend', (e) => {
+    if (!touch || !touch.handled) { touch = null; return; }
+    const t = e.changedTouches[0];
+    const dx = touch.x - t.clientX;
+    const dy = touch.y - t.clientY;
+    const d = INTRO_AXIS === 'x' && Math.abs(dx) > Math.abs(dy) ? dx : dy;
+    touch = null;
+    if (Math.abs(d) > 35) go(d > 0 ? 1 : -1);
+  });
+
+  /* Keyboard: arrows, Page Up/Down, Space */
+  window.addEventListener('keydown', (e) => {
+    if (e.target instanceof Element && e.target.closest('input, textarea, select, button, [contenteditable]')) return;
+    const forward = ['ArrowDown', 'PageDown', ' ', ...(INTRO_AXIS === 'x' ? ['ArrowRight'] : [])];
+    const back = ['ArrowUp', 'PageUp', ...(INTRO_AXIS === 'x' ? ['ArrowLeft'] : [])];
+    const dir = forward.includes(e.key) && !e.shiftKey ? 1
+      : back.includes(e.key) || (e.key === ' ' && e.shiftKey) ? -1 : 0;
+    if (!dir || !wants(dir)) return;
+    e.preventDefault();
+    go(dir);
+  });
+
+  // Arriving back at the top with leftover scroll momentum shouldn't instantly step back.
+  let wasAtTop = atTop();
+  window.addEventListener('scroll', () => {
+    const now = atTop();
+    if (now && !wasAtTop) { locked = true; lastWheel = performance.now(); scheduleUnlock(); }
+    wasAtTop = now;
+  }, { passive: true });
+
+  // Links back to the very top (e.g. the "Haven" wordmark when it points at #intro) restart the intro.
+  window.addEventListener('hashchange', () => {
+    if (location.hash === '#intro') {
+      slides[index].classList.remove('is-current');
+      index = 0;
+      slides[0].classList.add('is-current');
+    }
+  });
+}
 
 /* ---------- Header: hairline border once the page scrolls ---------- */
 function initHeader() {

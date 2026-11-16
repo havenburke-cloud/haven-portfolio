@@ -9,7 +9,7 @@
    It ends in /exec. While it still says YOUR_APPS_SCRIPT_URL_HERE, the form
    runs in preview mode: it shows the confirmation but sends nothing.
    -------------------------------------------------------------------------- */
-const FORM_ENDPOINT = 'YOUR_APPS_SCRIPT_URL_HERE';
+const FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbx-02Ap8oKV1Pw5LqbU175hHi0FXZLfjSYSwKJEW-3LbqBkdP8jKdmw_hC4Sotv2aiC/exec';
 
 /* --------------------------------------------------------------------------
    >>> 2. BOOK A CALL → GOOGLE CALENDAR: REPLACE THIS <<<

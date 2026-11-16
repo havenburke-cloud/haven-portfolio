@@ -74,8 +74,12 @@ function initIntro() {
     if (img.decode) img.decode().catch(() => {});
   });
 
-  // Arriving mid-page (refresh or a #link): show the last screen, ready to scroll back through.
-  let index = window.scrollY > 4 || location.hash ? last : 0;
+  // Always open on "Hello!": stop the browser restoring an old scroll position.
+  // Only a deliberate link to a section (e.g. #book) skips past the intro.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  const deepLink = location.hash && location.hash !== '#intro';
+  if (!deepLink) window.scrollTo(0, 0);
+  let index = deepLink ? last : 0;
   slides[index].classList.add('is-current');
 
   let animating = false;

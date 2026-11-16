@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Instrument+Serif&family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 
   <link rel="preload" as="image" href="images/intro-hands.jpg" fetchpriority="high">
-  <link rel="stylesheet" href="css/styles.css?v=18">
+  <link rel="stylesheet" href="css/styles.css?v=19">
   <link rel="stylesheet" href="css/lucky-slot.css?v=9">
   <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -160,7 +160,10 @@
         <div class="about__body reveal">
           <p class="about__lead">I’m a web designer with a degree in UX/UI design. I create digital products and services that are thoughtful, functional, and beautifully designed.</p>
           <p>I help small businesses grow with standout visuals and websites that are easy for everyone to use. Whether you need a portfolio to showcase your work or a booking site that brings in new clients, I’ll build something that fits your brand and works for your customers.</p>
-          <a class="btn" href="#book">Let's work together</a>
+          <div class="about__actions">
+            <a class="btn" href="#book">Let's work together</a>
+            <button class="btn btn--outline" type="button" data-open-ai-policy aria-haspopup="dialog">My AI policy</button>
+          </div>
         </div>
       </div>
     </section>
@@ -245,13 +248,40 @@
         <li><a href="https://instagram.com/yourhandle" rel="noopener">Instagram</a></li>
         <li><a href="https://tiktok.com/@yourhandle" rel="noopener">TikTok</a></li>
         <li><a href="https://www.linkedin.com/in/yourprofile" rel="noopener">LinkedIn</a></li>
+        <li><button class="footer__link-btn" type="button" data-open-ai-policy aria-haspopup="dialog">AI policy</button></li>
       </ul>
 
       <p class="footer__copy">&copy; <span data-year>2026</span> Haven. All rights reserved.</p>
     </div>
   </footer>
 
+  <!-- ============ AI POLICY (opens from "My AI policy" / footer) ============
+       Approved by Haven, Nov 2026. Edit the wording here if your process changes. -->
+  <dialog class="policy" id="ai-policy" aria-labelledby="ai-policy-title">
+    <div class="policy__inner">
+      <button class="policy__close" type="button" data-close-ai-policy aria-label="Close AI policy">&times;</button>
+      <p class="eyebrow">Transparency</p>
+      <h2 class="policy__title" id="ai-policy-title">My AI policy</h2>
+
+      <h3>How I use AI</h3>
+      <p>I use AI tools to help with parts of my process, like drafting and checking code, organising ideas, and testing that sites are easy for everyone to use. I review, edit and approve everything before it reaches you. The design decisions are always mine.</p>
+
+      <h3>What I don’t do</h3>
+      <ul>
+        <li>I don’t pass off AI-generated images as real photography or original artwork without telling you.</li>
+        <li>I don’t use AI to copy another business’s branding, writing or designs.</li>
+        <li>I don’t let AI make decisions about your brand without you.</li>
+      </ul>
+
+      <h3>Your content and privacy</h3>
+      <p>I don’t put your private files, client details or unpublished work into AI tools without your permission.</p>
+
+      <h3>It’s your choice</h3>
+      <p>If you’d rather I didn’t use AI on your project, just tell me and I’ll work without it. Questions are always welcome.</p>
+    </div>
+  </dialog>
+
   <script src="js/lucky-slot.js?v=9" defer></script>
-  <script src="js/main.js?v=17" defer></script>
+  <script src="js/main.js?v=19" defer></script>
 </body>
 </html>

@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTierButtons();
   initBooking();
   initQuestionForm();
+  initAiPolicy();
   initQuoteForm();
 
   const year = document.querySelector('[data-year]');
@@ -526,6 +527,20 @@ function initBooking() {
     a.hidden = false;
   });
   document.querySelectorAll('[data-booking-fallback]').forEach((el) => { el.hidden = true; });
+}
+
+/* ---------- AI policy pop-up ---------- */
+function initAiPolicy() {
+  const dialog = document.getElementById('ai-policy');
+  if (!dialog || typeof dialog.showModal !== 'function') return;
+  let opener = null;
+  document.querySelectorAll('[data-open-ai-policy]').forEach((btn) => {
+    btn.addEventListener('click', () => { opener = btn; dialog.showModal(); });
+  });
+  dialog.querySelector('[data-close-ai-policy]').addEventListener('click', () => dialog.close());
+  // Clicking the dark area outside the panel closes it.
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+  dialog.addEventListener('close', () => { if (opener) opener.focus(); });
 }
 
 /* ---------- "Have a question?" form → Gmail ---------- */

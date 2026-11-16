@@ -1,0 +1,106 @@
+# Web Designs by Haven
+
+Portfolio, booking and quote-request site. Plain HTML, CSS and vanilla JavaScript: no frameworks, no build step.
+
+- **Book a call** goes to your **Google Calendar** (appointment schedule).
+- **Quote requests** go to your **Gmail**, with uploaded images saved to **Google Drive**.
+- Hosted free on **GitHub Pages**.
+
+```
+index.html
+css/styles.css
+js/main.js                  ← the two settings you fill in are at the top
+images/                     ← your photo and work screenshots (web-sized JPGs)
+google-apps-script/Code.gs  ← paste into Google Apps Script (step 1)
+```
+
+---
+
+## Step 1: Send quote requests to your Gmail (about 10 minutes)
+
+This uses Google Apps Script, a free tool in your Google account. Requests are emailed to you, and uploaded images are saved in a Drive folder called **Website quote requests**.
+
+1. Go to <https://script.google.com> (signed in to your Gmail account) and click **New project**.
+2. Name it "Website quote form" (click "Untitled project" at the top).
+3. Delete everything in the editor, then paste in the whole of [`google-apps-script/Code.gs`](google-apps-script/Code.gs). Click the save icon.
+4. **Grant permissions and test:** in the toolbar dropdown choose **testSetup**, click **Run**, and approve the permissions it asks for. If you see "Google hasn't verified this app", click **Advanced → Go to Website quote form**; that's normal for your own scripts. You should get a "New quote request" test email in Gmail.
+5. Click **Deploy → New deployment**. Click the gear next to "Select type" and choose **Web app**.
+   - Execute as: **Me**
+   - Who has access: **Anyone**
+   - Click **Deploy**, then copy the **Web app URL** (it ends in `/exec`).
+6. In `js/main.js`, replace `YOUR_APPS_SCRIPT_URL_HERE` with that URL.
+
+**If you change `Code.gs` later:** go to **Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy**. The URL stays the same.
+
+Options at the top of `Code.gs`:
+- `NOTIFY_EMAIL`: send requests to a different address (blank = your Gmail).
+- `SEND_AUTO_REPLY`: email clients a "thanks, I got it" note. It's off by default so bots can't use your form to send email from your address.
+
+## Step 2: Let people book calls on your Google Calendar (about 5 minutes)
+
+1. Open <https://calendar.google.com> on a computer and click **Create → Appointment schedule**.
+2. Set the title (e.g. "Free website consultation"), length (the site says **20 minutes**; change that text in `index.html` if yours differs), your available hours, and whether to add a Google Meet link. Click **Save**.
+3. Click the schedule on your calendar, then **Share**:
+   - **Best:** choose **Website embed → Inline schedule**, click **Copy**, and from the code you copied take just the web address inside `src="…"` (it contains `/calendar/appointments/schedules/`). The calendar then shows right on your site.
+   - **Or:** copy the **Booking page** link (`https://calendar.app.google/…`). The site then shows a "Choose a time" button instead.
+4. In `js/main.js`, replace `YOUR_BOOKING_URL_HERE` with that address.
+
+Bookings land on your Google Calendar, and Google emails both you and the client. Appointment schedules are free with a personal Gmail account; some extras (such as checking several calendars or sending reminder emails) need a paid Google plan. Check Google's help page for the current details.
+
+## Step 3: Publish your changes
+
+After editing files, commit and push:
+
+```sh
+cd ~/Documents/projects/haven-portfolio
+git add -A
+git commit -m "Update site"
+git push
+```
+
+GitHub Pages updates the live site within a minute or two.
+
+---
+
+## Preview locally
+
+```sh
+cd ~/Documents/projects/haven-portfolio
+python3 -m http.server 8000
+```
+
+Open <http://localhost:8000> and stop the server with `Ctrl+C`. While `FORM_ENDPOINT` still says `YOUR_APPS_SCRIPT_URL_HERE`, the form runs in **preview mode**: it shows the confirmation with a note, but sends nothing.
+
+---
+
+## Placeholders to replace
+
+| Where | Placeholder | Replace with |
+| --- | --- | --- |
+| `js/main.js`, top | `YOUR_APPS_SCRIPT_URL_HERE` | Web app URL from step 1 |
+| `js/main.js`, top | `YOUR_BOOKING_URL_HERE` | Appointment schedule link from step 2 |
+| `index.html`, Book a call | `20-minute` | Your call length |
+| `index.html`, Services (×3) | `Starting at $___` | Your starting prices |
+| `index.html`, Services | Tier descriptions and bullet points | What you actually include |
+| `index.html`, About (marked `PLACEHOLDER BIO`) | The four bio paragraphs | Your own bio |
+| `index.html`, About | `[a personal detail or two, …]` | A personal touch |
+| `index.html`, Hero | "Clean, considered websites…" | Your own tagline, if you like |
+| `index.html`, Confirmation | `[2 business days]` | Your real reply time |
+| `index.html`, Footer | `hello@yourdomain.com` (link and text) | The email you want public |
+| `index.html`, Footer | `https://instagram.com/yourhandle` | Your Instagram |
+| `index.html`, Footer | `https://tiktok.com/@yourhandle` | Your TikTok |
+| `index.html`, Footer | `https://www.linkedin.com/in/yourprofile` | Your LinkedIn, or delete the line |
+| `index.html`, `<meta name="description">` | Site description | Your one-sentence description for Google |
+| `index.html`, Work section | Alt text and `data-title` | Correct spellings of client names |
+
+Search tip: searching for `YOUR_`, `yourdomain`, `yourhandle`, `yourprofile`, `$___` and `[` finds most of these.
+
+---
+
+## Customising
+
+- **Colours, fonts, spacing:** CSS variables at the top of `css/styles.css` (`--accent`, `--font-serif`, …).
+- **Hero background grey:** `--hero-grey: #dadbdf` matches your photo's backdrop. Update it if you change the photo.
+- **Work screenshots:** the `<img class="laptop__slide">` tags in `index.html`, in rotation order; dots are generated automatically. Export new ones as JPG about 1600px wide. Change the timing with `SLIDE_INTERVAL_MS` in `js/main.js`.
+- **Upload limits:** top of `js/main.js`. Images are shrunk in the visitor's browser to 2000px before sending, so a phone photo uploads at well under 1 MB.
+- **Custom domain:** buy a domain, then in GitHub go to the repo's **Settings → Pages → Custom domain** and follow the DNS instructions there.

@@ -1161,7 +1161,30 @@ html:not(.js) .intro__slot { display: none; }
   width: .62em;
   height: .62em;
   overflow: visible;
+  transform-origin: 0 0; /* the arrow tip */
 }
+
+/* "I've got you.": once the swipe settles, the cursor glides onto the words,
+   clicks, and the words + dashed frame turn #B52137. Resets when the screen leaves. */
+.intro__box { transition: color .2s ease, border-color .2s ease; }
+.intro.is-snapping .intro__slide--got.is-settled .intro__cursor {
+  animation: intro-cursor-click 1s cubic-bezier(.45, 0, .25, 1) .15s both;
+}
+.intro.is-snapping .intro__slide--got.is-settled .intro__box {
+  color: #b52137;
+  border-color: #b52137;
+  transition-delay: .8s; /* lands on the click */
+}
+@keyframes intro-cursor-click {
+  0%   { transform: translate(0, 0) scale(1); }
+  62%  { transform: translate(-1.25em, -.8em) scale(1); }
+  70%  { transform: translate(-1.25em, -.8em) scale(.78); } /* press */
+  80%  { transform: translate(-1.25em, -.8em) scale(1); }   /* release */
+  100% { transform: translate(-1.25em, -.8em) scale(1); }
+}
+/* No snapping (reduced motion / no JavaScript): show the clicked state. */
+.intro:not(.is-snapping) .intro__box { color: #b52137; border-color: #b52137; }
+.intro:not(.is-snapping) .intro__cursor { transform: translate(-1.25em, -.8em); }
 
 /* White-background screens scale to fit (never crop the SPIN button or the box);
    photo screens above scale to fill. */

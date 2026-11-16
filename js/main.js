@@ -80,8 +80,28 @@ function initIntro() {
   // Always open on "Hello!": stop the browser restoring an old scroll position.
   // Only a deliberate link to a section (e.g. #book) skips past the intro.
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  // A reload always starts over at "Hello!", even if the address still ends in
+  // something like #about from clicking the menu earlier.
+  const nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+  if (nav && nav.type === 'reload' && location.hash) {
+    history.replaceState(null, '', location.pathname + location.search);
+  }
   const deepLink = location.hash && location.hash !== '#intro';
-  if (!deepLink) window.scrollTo(0, 0);
+  if (!deepLink) {
+    window.scrollTo(0, 0);
+    // Some browsers jump to the old #section a moment later; undo that once loaded.
+    window.addEventListener('load', () => window.scrollTo(0, 0), { once: true });
+  } else {
+    // The browser jumped to the section before the intro shrank to one screen,
+    // so go there again now that the page is laid out.
+    const goToSection = () => {
+      let target = null;
+      try { target = document.querySelector(location.hash); } catch { /* not a valid selector */ }
+      if (target) target.scrollIntoView({ behavior: 'instant' });
+    };
+    requestAnimationFrame(goToSection);
+    window.addEventListener('load', goToSection, { once: true });
+  }
   let index = deepLink ? last : 0;
   slides[index].classList.add('is-current', 'is-settled');
 

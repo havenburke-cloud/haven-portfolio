@@ -240,25 +240,27 @@ function initIntro() {
 }
 
 /* ---------- "Looking for this?": the eyes follow the mouse ----------
-   Each eye window holds a copy of the photo lined up exactly over the original;
-   sliding that copy a little moves the iris while the lids and lashes stay put.
+   Only the irises move: each is a circle of the photo that slides inside the
+   traced eye opening, over a soft white patch that hides where it used to be.
    Without a mouse (phones), the eyes glance around slowly on their own. */
 function initEyes() {
-  const eyes = Array.from(document.querySelectorAll('[data-eye]'));
+  const irises = Array.from(document.querySelectorAll('[data-iris]'));
   const slide = document.querySelector('.intro__slide--looking');
-  if (!eyes.length || !slide || reduceMotion.matches) return;
+  if (!irises.length || !slide || reduceMotion.matches) return;
 
-  const MAX_X = 0.16; // furthest the iris travels sideways, as a share of the eye window's width
-  const MAX_Y = 0.05; // and up/down, as a share of its height (kept small so lashes don't shift)
+  // How far the iris can travel, as a share of its own width.
+  const MAX_X = 0.32;     // sideways
+  const MAX_DOWN = 0.07;  // down (more would pull lash shadow into view)
+  const MAX_UP = 0.12;    // up, under the lashes
   const hasMouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-  let mouse = null;   // last mouse position
-  let look = { x: 0, y: 0 };   // where the eyes are looking now (-1 … 1)
+  let mouse = null;
+  const look = { x: 0, y: 0 }; // where the eyes are looking now (-1 … 1)
   let running = false;
 
   if (hasMouse) {
     window.addEventListener('mousemove', (e) => { mouse = { x: e.clientX, y: e.clientY }; wake(); }, { passive: true });
-    document.addEventListener('mouseleave', () => { mouse = null; });
+    document.addEventListener('mouseleave', () => { mouse = null; wake(); });
   }
 
   const visible = () => {
@@ -272,19 +274,19 @@ function initEyes() {
 
   function target(t) {
     if (mouse) {
-      // Aim at the mouse from the point between the two eyes.
-      const a = eyes[0].getBoundingClientRect();
-      const b = eyes[eyes.length - 1].getBoundingClientRect();
+      // Aim from the point between the two eyes toward the mouse.
+      const a = irises[0].getBoundingClientRect();
+      const b = irises[irises.length - 1].getBoundingClientRect();
       const cx = (a.left + b.right) / 2;
       const cy = (a.top + b.bottom) / 2;
       return {
-        x: Math.max(-1, Math.min(1, (mouse.x - cx) / (window.innerWidth * 0.45))),
-        y: Math.max(-1, Math.min(1, (mouse.y - cy) / (window.innerHeight * 0.45))),
+        x: Math.max(-1, Math.min(1, (mouse.x - cx) / (window.innerWidth * 0.4))),
+        y: Math.max(-1, Math.min(1, (mouse.y - cy) / (window.innerHeight * 0.4))),
       };
     }
     if (!hasMouse) {
       // Idle glance: drift left and right, pausing now and then.
-      return { x: Math.sin(t / 1400) * 0.8 * Math.min(1, Math.abs(Math.sin(t / 3100)) * 1.6), y: 0 };
+      return { x: Math.sin(t / 1400) * 0.85 * Math.min(1, Math.abs(Math.sin(t / 3100)) * 1.6), y: 0 };
     }
     return { x: 0, y: 0 };
   }
@@ -292,11 +294,16 @@ function initEyes() {
   function frame(t) {
     if (!visible()) { running = false; return; }
     const goal = target(t);
-    look.x += (goal.x - look.x) * 0.12; // ease toward the goal for a natural follow
-    look.y += (goal.y - look.y) * 0.12;
-    eyes.forEach((eye) => {
-      const img = eye.firstElementChild;
-      img.style.transform = `translate(${(look.x * MAX_X * eye.clientWidth).toFixed(2)}px, ${(look.y * MAX_Y * eye.clientHeight).toFixed(2)}px)`;
+    look.x += (goal.x - look.x) * 0.14; // ease toward the goal for a natural follow
+    look.y += (goal.y - look.y) * 0.14;
+    irises.forEach((iris) => {
+      const w = iris.clientWidth;
+      const dx = look.x * MAX_X * w;
+      const dy = look.y * (look.y > 0 ? MAX_DOWN : MAX_UP) * w;
+      iris.style.transform = `translate(${dx.toFixed(2)}px, ${dy.toFixed(2)}px)`;
+      // Fade in the white patch as the iris leaves its original spot.
+      const away = Math.min(1, Math.hypot(dx, dy) / (w * 0.06));
+      iris.previousElementSibling.style.opacity = away.toFixed(3);
     });
     requestAnimationFrame(frame);
   }

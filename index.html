@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Instrument+Serif&family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 
   <link rel="preload" as="image" href="images/intro-hands.jpg" fetchpriority="high">
-  <link rel="stylesheet" href="css/styles.css?v=12">
+  <link rel="stylesheet" href="css/styles.css?v=13">
   <link rel="stylesheet" href="css/lucky-slot.css?v=9">
   <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -37,9 +37,17 @@
         <div class="intro__face" data-face>
           <img class="intro__img" src="images/intro-face.jpg" width="1900" height="1270"
                alt="A woman with blonde curtain bangs looking upward, wearing dramatic wispy false lashes.">
-          <!-- Eyes that follow the mouse: each window shows a copy of the photo that shifts slightly (js/main.js, initEyes) -->
-          <div class="intro__eye intro__eye--left" data-eye aria-hidden="true"><img src="images/intro-face.jpg" alt=""></div>
-          <div class="intro__eye intro__eye--right" data-eye aria-hidden="true"><img src="images/intro-face.jpg" alt=""></div>
+          <!-- Eyes that follow the mouse (js/main.js, initEyes). Inside each eye opening:
+               a soft white patch hides the original iris, and a circle of the photo
+               (the iris itself) slides over it. At rest the iris sits exactly where it was. -->
+          <div class="intro__eye intro__eye--left" aria-hidden="true">
+            <span class="intro__sclera"></span>
+            <span class="intro__iris" data-iris><img src="images/intro-face.jpg" alt=""></span>
+          </div>
+          <div class="intro__eye intro__eye--right" aria-hidden="true">
+            <span class="intro__sclera"></span>
+            <span class="intro__iris" data-iris><img src="images/intro-face.jpg" alt=""></span>
+          </div>
         </div>
       </div>
     </div>
@@ -504,6 +512,6 @@
   </footer>
 
   <script src="js/lucky-slot.js?v=9" defer></script>
-  <script src="js/main.js?v=12" defer></script>
+  <script src="js/main.js?v=13" defer></script>
 </body>
 </html>

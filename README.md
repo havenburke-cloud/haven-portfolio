@@ -2,8 +2,8 @@
 
 Portfolio, booking and quote-request site. Plain HTML, CSS and vanilla JavaScript: no frameworks, no build step.
 
-- **Book a call** goes to your **Google Calendar** (appointment schedule).
-- **Quote requests** go to your **Gmail**, with uploaded images saved to **Google Drive**.
+- **Book a consultation** ($20, paid through Stripe) goes to your **Google Calendar** (appointment schedule).
+- **Quote requests** and **questions** go to your **Gmail**; uploaded images are saved to **Google Drive**.
 - Hosted free on **GitHub Pages**.
 
 ```
@@ -30,7 +30,7 @@ This uses Google Apps Script, a free tool in your Google account. Requests are e
    - Click **Deploy**, then copy the **Web app URL** (it ends in `/exec`).
 6. In `js/main.js`, replace `YOUR_APPS_SCRIPT_URL_HERE` with that URL.
 
-**If you change `Code.gs` later:** go to **Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy**. The URL stays the same.
+**If you change `Code.gs` later** (paste the new version over the old one first): go to **Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy**. The URL stays the same.
 
 Options at the top of `Code.gs`:
 - `NOTIFY_EMAIL`: send requests to a different address (blank = your Gmail).
@@ -40,12 +40,27 @@ Options at the top of `Code.gs`:
 
 1. Open <https://calendar.google.com> on a computer and click **Create → Appointment schedule**.
 2. Set the title (e.g. "Free website consultation"), length (the site says **20 minutes**; change that text in `index.html` if yours differs), your available hours, and whether to add a Google Meet link. Click **Save**.
-3. Click the schedule on your calendar, then **Share**:
-   - **Best:** choose **Website embed → Inline schedule**, click **Copy**, and from the code you copied take just the web address inside `src="…"` (it contains `/calendar/appointments/schedules/`). The calendar then shows right on your site.
-   - **Or:** copy the **Booking page** link (`https://calendar.app.google/…`). The site then shows a "Choose a time" button instead.
-4. In `js/main.js`, replace `YOUR_BOOKING_URL_HERE` with that address.
+3. Click the schedule on your calendar, then **Share**, and copy the **Booking page** link.
+4. In `js/main.js`, set `BOOKING_URL` to that address. The site's "Choose a time" button opens it in a new tab.
 
 Bookings land on your Google Calendar, and Google emails both you and the client. Appointment schedules are free with a personal Gmail account; some extras (such as checking several calendars or sending reminder emails) need a paid Google plan. Check Google's help page for the current details.
+
+## Step 2b: Charge $20 for consultations (Stripe)
+
+Payments need a paid Google plan (Google Workspace, or Google One Premium) **on the same account that owns the appointment schedule**. If the schedule still shows "Upgrade", it was made in an account without the plan.
+
+1. In Google Calendar, click your appointment schedule → **pencil (Edit)**.
+2. Open **Payments & cancellation policy** → turn on **Require payment** → **Connect Stripe account**.
+3. Sign in to Stripe or create an account. Stripe asks for your business details, your bank account (for payouts) and ID verification. Use "Individual / sole proprietor" if you don't have a registered business.
+4. Back in Google Calendar, set the **price to $20.00 USD**.
+5. Add your **cancellation policy** (text below), then click **Save**.
+6. Optional (premium): under **Booking form**, turn on **email verification**; under **Booking confirmations and reminders**, add an **email reminder** (e.g. 1 day before).
+
+Suggested cancellation policy text:
+
+> The $20 consultation fee is paid at booking and will be deducted from your final website price if you move forward. The fee is non-refundable if you decide not to go ahead. To reschedule, please give at least 24 hours' notice.
+
+Stripe keeps a small fee per payment (about 2.9% + 30¢ in the US), so you receive about $19.12.
 
 ## Step 3: Publish your changes
 
@@ -79,7 +94,7 @@ Open <http://localhost:8000> and stop the server with `Ctrl+C`. While `FORM_ENDP
 | --- | --- | --- |
 | `js/main.js`, top | `YOUR_APPS_SCRIPT_URL_HERE` | Web app URL from step 1 |
 | `js/main.js`, top | `YOUR_BOOKING_URL_HERE` | Appointment schedule link from step 2 |
-| `index.html`, Book a call | `20-minute` | Your call length |
+| `index.html`, Consultation card | `20 minutes` and `$20` | Your call length and fee, if they change |
 | `index.html`, Services (×3) | `Starting at $___` | Your starting prices |
 | `index.html`, Services | Tier descriptions and bullet points | What you actually include |
 | `index.html`, About (marked `PLACEHOLDER BIO`) | The four bio paragraphs | Your own bio |

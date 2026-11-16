@@ -12,12 +12,12 @@
 const FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbx-02Ap8oKV1Pw5LqbU175hHi0FXZLfjSYSwKJEW-3LbqBkdP8jKdmw_hC4Sotv2aiC/exec';
 
 /* --------------------------------------------------------------------------
-   >>> 2. BOOK A CALL → GOOGLE CALENDAR: REPLACE THIS <<<
-   Paste your Google Calendar appointment schedule link here (README.md,
-   step 2). Either kind works:
-   - the embed link (…/calendar/appointments/schedules/…), shown as a calendar on the page
-   - the short share link (https://calendar.app.google/…), shown as a button
-   While it still says YOUR_BOOKING_URL_HERE, a "booking opens soon" note shows.
+   >>> 2. CONSULTATION BOOKING → GOOGLE CALENDAR <<<
+   Your Google Calendar appointment schedule link (README.md, step 2).
+   The "Choose a time" button opens it in a new tab, where Google takes the
+   $20 payment through Stripe. Either the long link (…/appointments/schedules/…)
+   or the short share link (https://calendar.app.google/…) works.
+   While it says YOUR_BOOKING_URL_HERE, a "booking opens soon" note shows.
    -------------------------------------------------------------------------- */
 const BOOKING_URL = 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ1Q5F74ffKXCiqlz4yuGBwal7FCJKbMy-8JYSYDOU5OkCIH8eJu_eOvgAteJN2A6ReZXtQWbgcQ?gv=true';
 
@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initShowcase();
   initTierButtons();
   initBooking();
+  initQuestionForm();
   initQuoteForm();
 
   const year = document.querySelector('[data-year]');
@@ -231,30 +232,120 @@ function initTierButtons() {
   });
 }
 
-/* ---------- Book a call: Google Calendar appointment schedule ---------- */
+/* ---------- Consultation: link to the Google Calendar booking page ---------- */
 function initBooking() {
-  const frame = document.querySelector('[data-booking-frame]');
-  const button = document.querySelector('[data-booking-button]');
-  const fallback = document.querySelector('[data-booking-fallback]');
-  const alt = document.querySelector('[data-booking-alt]');
-  if (!frame || BOOKING_URL.includes('YOUR_BOOKING_URL')) return; // keep the "opens soon" note
+  if (BOOKING_URL.includes('YOUR_BOOKING_URL')) return; // keep the "opens soon" note
 
   let url;
   try { url = new URL(BOOKING_URL); } catch { return; }
+  url.searchParams.delete('gv'); // "gv" is only for embedding; without it Google shows the full booking page
 
-  document.querySelectorAll('[data-booking-link]').forEach((a) => { a.href = url.href; });
-  fallback.hidden = true;
+  document.querySelectorAll('[data-booking-link]').forEach((a) => {
+    a.href = url.href;
+    a.hidden = false;
+  });
+  document.querySelectorAll('[data-booking-fallback]').forEach((el) => { el.hidden = true; });
+}
 
-  // Google's full appointment-schedule URL can be embedded; short links can't.
-  if (url.pathname.includes('/appointments/')) {
-    const embed = new URL(url);
-    embed.searchParams.set('gv', 'true');
-    frame.src = embed.href;
-    frame.hidden = false;
-    alt.hidden = false;
-  } else {
-    button.hidden = false;
+/* ---------- "Have a question?" form → Gmail ---------- */
+function initQuestionForm() {
+  const form = document.getElementById('question-form');
+  if (!form) return;
+
+  const alertBox = form.querySelector('[data-q-alert]');
+  const submitBtn = form.querySelector('[data-q-submit]');
+  const done = document.querySelector('[data-q-done]');
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  const rules = {
+    name: (v) => (v ? '' : 'Please enter your name.'),
+    email: (v) => (!v ? 'Please enter your email address so I can reply.'
+      : EMAIL_RE.test(v) ? '' : 'That email doesn’t look quite right. Try something like name@example.com.'),
+    message: (v) => (v ? '' : 'Please type your question.'),
+  };
+
+  const check = (field) => {
+    const input = form.elements[field];
+    const message = rules[field](input.value.trim());
+    form.querySelector(`[data-q-error-for="${field}"]`).textContent = message;
+    if (message) input.setAttribute('aria-invalid', 'true');
+    else input.removeAttribute('aria-invalid');
+    return !message;
+  };
+
+  Object.keys(rules).forEach((field) => {
+    const input = form.elements[field];
+    input.addEventListener('blur', () => { if (input.value.trim() || input.hasAttribute('aria-invalid')) check(field); });
+    input.addEventListener('input', () => { if (input.hasAttribute('aria-invalid')) check(field); });
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    alertBox.hidden = true;
+
+    const invalid = Object.keys(rules).filter((f) => !check(f));
+    if (invalid.length) {
+      form.elements[invalid[0]].focus();
+      return;
+    }
+
+    const name = form.elements.name.value.trim();
+    if (form.elements._gotcha.value) { showDone(name); return; } // spam trap
+
+    submitBtn.disabled = true;
+    const label = submitBtn.textContent;
+    submitBtn.textContent = 'Sending…';
+
+    try {
+      await sendToScript({
+        type: 'question',
+        name,
+        email: form.elements.email.value.trim(),
+        tier: 'General question',
+        details: form.elements.message.value.trim(),
+        page: location.href,
+      });
+      showDone(name);
+    } catch (err) {
+      console.error(err);
+      alertBox.textContent = 'Sorry, your question didn’t send. Please try again in a moment.';
+      alertBox.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = label;
+    }
+  });
+
+  function showDone(name) {
+    done.querySelector('[data-q-name]').textContent = name.split(/\s+/)[0] || 'friend';
+    form.hidden = true;
+    done.hidden = false;
+    done.querySelector('.question__done-title').focus();
   }
+
+  done.querySelector('[data-q-again]').addEventListener('click', () => {
+    form.reset();
+    done.hidden = true;
+    form.hidden = false;
+    form.elements.name.focus();
+  });
+}
+
+/** Sends a JSON payload to the Google Apps Script web app (FORM_ENDPOINT). */
+async function sendToScript(payload) {
+  if (FORM_ENDPOINT.includes('YOUR_APPS_SCRIPT_URL')) {
+    console.warn('[Haven] FORM_ENDPOINT is still a placeholder in js/main.js, so nothing was sent.', payload);
+    await new Promise((r) => setTimeout(r, 600));
+    return;
+  }
+  // text/plain keeps this a "simple" request, which Google Apps Script accepts from any site.
+  const res = await fetch(FORM_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+  });
+  const result = await res.json().catch(() => ({}));
+  if (!res.ok || !result.ok) throw new Error(result.error || `Server responded ${res.status}`);
 }
 
 /* If the confirmation is showing, bring the form back (used by "Request this"). */
@@ -462,20 +553,7 @@ function initQuoteForm() {
       submitBtn.textContent = 'Sending…';
       const payload = { ...fields, images, page: location.href };
 
-      if (previewMode) {
-        console.warn('[Haven] FORM_ENDPOINT is still a placeholder in js/main.js, so nothing was sent.',
-          { ...payload, images: images.map((i) => `${i.name} (${Math.round(i.data.length * 0.75 / 1024)} KB)`) });
-        await new Promise((r) => setTimeout(r, 600));
-      } else {
-        // text/plain keeps this a "simple" request, which Google Apps Script accepts from any site.
-        const res = await fetch(FORM_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload),
-        });
-        const result = await res.json().catch(() => ({}));
-        if (!res.ok || !result.ok) throw new Error(result.error || `Server responded ${res.status}`);
-      }
+      await sendToScript({ type: 'quote', ...payload });
       showConfirmation(fields.name, previewMode);
     } catch (err) {
       console.error(err);

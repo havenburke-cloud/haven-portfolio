@@ -849,7 +849,7 @@ textarea:focus-visible {
 .footer__links a {
   text-decoration: none;
   display: inline-block;
-  padding: 6px 0;
+  padding: 12px 0; /* at least 44px tall, easy to tap */
 }
 .footer__links a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
 
@@ -1266,7 +1266,7 @@ html:not(.js) .intro__slot { display: none; }
 .policy__close:hover { background: rgba(0, 0, 0, .06); }
 
 .footer__link-btn {
-  padding: 6px 0;
+  padding: 12px 0;
   border: 0;
   background: none;
   font: inherit;

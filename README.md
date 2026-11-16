@@ -1,29 +1,29 @@
 # Web Designs by Haven
 
-Portfolio, booking and quote-request site. Plain HTML, CSS and vanilla JavaScript: no frameworks, no build step.
+Portfolio and booking site. Plain HTML, CSS and vanilla JavaScript: no frameworks, no build step.
 
 - **Book a consultation** ($20, paid through Stripe) goes to your **Google Calendar** (appointment schedule).
-- **Quote requests** and **questions** go to your **Gmail**; uploaded images are saved to **Google Drive**.
+- **Questions** from the "Have a question?" form go to your **Gmail**.
 - Hosted free on **GitHub Pages**.
 
 ```
 index.html
 css/styles.css
 js/main.js                  ← the two settings you fill in are at the top
-images/                     ← your photo and work screenshots (web-sized JPGs)
+images/                     ← intro photos, logo, slot machine images
 google-apps-script/Code.gs  ← paste into Google Apps Script (step 1)
 ```
 
 ---
 
-## Step 1: Send quote requests to your Gmail (about 10 minutes)
+## Step 1: Send questions to your Gmail (already set up)
 
-This uses Google Apps Script, a free tool in your Google account. Requests are emailed to you, and uploaded images are saved in a Drive folder called **Website quote requests**.
+This uses Google Apps Script, a free tool in your Google account. Each question is emailed to you; reply to the email to reply to the person. The script accepts only name, email and message (no files) and limits how many messages can arrive per hour, so nobody can flood your inbox.
 
 1. Go to <https://script.google.com> (signed in to your Gmail account) and click **New project**.
 2. Name it "Website quote form" (click "Untitled project" at the top).
 3. Delete everything in the editor, then paste in the whole of [`google-apps-script/Code.gs`](google-apps-script/Code.gs). Click the save icon.
-4. **Grant permissions and test:** in the toolbar dropdown choose **testSetup**, click **Run**, and approve the permissions it asks for. If you see "Google hasn't verified this app", click **Advanced → Go to Website quote form**; that's normal for your own scripts. You should get a "New quote request" test email in Gmail.
+4. **Grant permissions and test:** in the toolbar dropdown choose **testSetup**, click **Run**, and approve the permissions it asks for. If you see "Google hasn't verified this app", click **Advanced → Go to Website quote form**; that's normal for your own scripts. You should get a "New question" test email in Gmail.
 5. Click **Deploy → New deployment**. Click the gear next to "Select type" and choose **Web app**.
    - Execute as: **Me**
    - Who has access: **Anyone**
@@ -33,8 +33,8 @@ This uses Google Apps Script, a free tool in your Google account. Requests are e
 **If you change `Code.gs` later** (paste the new version over the old one first): go to **Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy**. The URL stays the same.
 
 Options at the top of `Code.gs`:
-- `NOTIFY_EMAIL`: send requests to a different address (blank = your Gmail).
-- `SEND_AUTO_REPLY`: email clients a "thanks, I got it" note. It's off by default so bots can't use your form to send email from your address.
+- `NOTIFY_EMAIL`: send questions to a different address (blank = your Gmail).
+- `PER_EMAIL_PER_HOUR` / `TOTAL_PER_HOUR`: the rate limits (3 per sender, 30 overall, per hour).
 
 ## Step 2: Let people book calls on your Google Calendar (about 5 minutes)
 
@@ -93,18 +93,11 @@ Open <http://localhost:8000> and stop the server with `Ctrl+C`. While `FORM_ENDP
 | Where | Placeholder | Replace with |
 | --- | --- | --- |
 | `index.html`, Consultation card | `20 minutes` and `$20` | Your call length and fee, if they change |
-| `index.html`, Footer | `hello@yourdomain.com` (link and text) | The email you want public |
-| `index.html`, Footer | `https://instagram.com/yourhandle` | Your Instagram |
-| `index.html`, Footer | `https://tiktok.com/@yourhandle` | Your TikTok |
-| `index.html`, Footer | `https://www.linkedin.com/in/yourprofile` | Your LinkedIn, or delete the line |
-| `index.html`, `<meta name="description">` | Site description | Your one-sentence description for Google |
-
-Search tip: searching for `yourdomain`, `yourhandle`, `yourprofile` and `[` finds most of these.
+| `index.html`, Footer | Commented-out email / social links | Your public email and social links (examples are in the comment) |
 
 ---
 
 ## Customising
 
 - **Colours, fonts, spacing:** CSS variables at the top of `css/styles.css` (`--accent`, `--font-serif`, …).
-- **Upload limits:** top of `js/main.js`. Images are shrunk in the visitor's browser to 2000px before sending, so a phone photo uploads at well under 1 MB.
 - **Custom domain:** buy a domain, then in GitHub go to the repo's **Settings → Pages → Custom domain** and follow the DNS instructions there.

@@ -1120,71 +1120,28 @@ textarea:focus-visible {
   mask-image: linear-gradient(to bottom, transparent 0, #000 9%);
 }
 
-/* Eyes that follow the mouse. Everything is measured in pixels of intro-face.jpg
-   (1900 × 1270). Each eye box is 200 × 80 px; the clip-path is the traced outline
-   of the eye opening (whites + visible iris), so the iris slides under the lids. */
+/* Eye windows, measured on intro-face.jpg (1900 × 1270): left eye 590,1100 and
+   right eye 1045,1105, each about 225 × 100 px. The copy inside is the full photo,
+   lined up exactly, so at rest nothing changes; js/main.js nudges it toward the mouse. */
 .intro__eye {
-  --img-w: 1900; --img-h: 1270; --box-w: 200; --box-h: 80;
   position: absolute;
-  left: calc(var(--box-l) / var(--img-w) * 100%);
-  top: calc(var(--box-t) / var(--img-h) * 100%);
-  width: calc(var(--box-w) / var(--img-w) * 100%);
-  height: calc(var(--box-h) / var(--img-h) * 100%);
-}
-.intro__eye--left {
-  --box-l: 600; --box-t: 1110;            /* box position */
-  --iris-x: 705; --iris-y: 1102; --iris-r: 50; /* iris centre and radius */
-  clip-path: polygon(1.25% 65.6%, 8.75% 46.9%, 17.5% 29.7%, 26.25% 20.3%, 30% 9.4%, 52.5% 6.25%,
-    75% 12.5%, 78.75% 28.1%, 86.25% 42.2%, 95% 65.6%, 90% 84.4%, 77.5% 93.75%, 52.5% 96.25%,
-    27.5% 93.1%, 11.25% 84.4%);
-}
-.intro__eye--right {
-  --box-l: 1060; --box-t: 1115;
-  --iris-x: 1155; --iris-y: 1114; --iris-r: 48;
-  clip-path: polygon(3.75% 75%, 6.25% 56.25%, 15% 43.75%, 21.25% 32.8%, 25% 20.3%, 46.25% 17.2%,
-    70% 23.4%, 77.5% 37.5%, 85% 50%, 93.75% 67.2%, 95.6% 78.1%, 87.5% 90%, 65% 94.4%,
-    40% 94.4%, 18.75% 90.6%, 7.5% 82.8%);
-}
-
-/* Circle around the iris position, used by both the white patch and the iris */
-.intro__sclera,
-.intro__iris {
-  position: absolute;
-  left: calc((var(--iris-x) - var(--iris-r) - var(--box-l)) / var(--box-w) * 100%);
-  top: calc((var(--iris-y) - var(--iris-r) - var(--box-t)) / var(--box-h) * 100%);
-  width: calc(var(--iris-r) * 2 / var(--box-w) * 100%);
-  aspect-ratio: 1;
-  border-radius: 50%;
-}
-
-/* White of the eye that shows when the iris moves away (colours sampled from the photo:
-   shadowed just under the lashes, lighter lower down). Slightly larger than the iris, soft edged. */
-.intro__sclera {
-  transform: scale(1.22);
-  opacity: 0; /* invisible at rest (the photo is untouched); js/main.js fades it in as the iris moves */
-  /* Only the lower part shows (the top sits under the lashes): deep lash shadow at the
-     lid line, easing to the photo's own white of the eye. */
-  background: linear-gradient(to bottom, #2f2420 0%, #2f2420 66%, #4a3b35 70%, #7d6b64 74%,
-    #a99c96 78%, #c7beb8 83%, #d8d3cd 89%, #dfdcd6 100%);
-  /* solid out past the original iris edge (1 / 1.22 = 82%), then a soft blend */
-  -webkit-mask-image: radial-gradient(circle closest-side, #000 86%, transparent 100%);
-  mask-image: radial-gradient(circle closest-side, #000 86%, transparent 100%);
-}
-
-/* The iris: a circle of the same photo, lined up exactly over the original */
-.intro__iris {
   overflow: hidden;
-  will-change: transform;
-  -webkit-mask-image: radial-gradient(circle closest-side, #000 90%, transparent 100%);
-  mask-image: radial-gradient(circle closest-side, #000 90%, transparent 100%);
+  top: 86.61%;
+  width: 11.84%;
+  height: 7.87%;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 55%, #000 45%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 55%, #000 45%, transparent 100%);
 }
-.intro__iris img {
+.intro__eye--left  { left: 31.05%; --eye-l: 590; --eye-t: 1100; }
+.intro__eye--right { left: 55%; top: 87.01%; --eye-l: 1045; --eye-t: 1105; }
+.intro__eye img {
   position: absolute;
   max-width: none;
-  width: calc(var(--img-w) / (var(--iris-r) * 2) * 100%);
+  width: calc(1900 / 225 * 100%);
   height: auto;
-  left: calc((var(--iris-x) - var(--iris-r)) / (var(--iris-r) * 2) * -100%);
-  top: calc((var(--iris-y) - var(--iris-r)) / (var(--iris-r) * 2) * -100%);
+  left: calc(var(--eye-l) / 225 * -100%);
+  top: calc(var(--eye-t) / 100 * -100%);
+  will-change: transform;
 }
 
 /* 3. Or maybe this? */

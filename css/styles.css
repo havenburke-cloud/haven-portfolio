@@ -1214,25 +1214,29 @@ html:not(.js) .intro__slot { display: none; }
   .intro__slide--maybe .intro__slot { left: 50%; top: auto; bottom: 9%; width: min(100%, 62vh); transform: translateX(-50%); --slot-layout-width: 600px; }
   .intro__slide--maybe .intro__img  { left: 50%; top: auto; bottom: 7%; width: min(96%, 70vh); transform: translateX(-50%); }
 
+  /* "How about this?" (from the phone mockup): both hair pieces side by side across the
+     top, slightly cropped at the outer edges, with the text centred underneath. */
+  .intro__slide--how .intro__img--left,
+  .intro__slide--how .intro__img--right { top: 0; width: auto; transform: none; }
+  .intro__slide--how .intro__img--left  { left: auto; right: 55.7%; height: 55%; }
+  .intro__slide--how .intro__img--right { left: 56%; right: auto; height: 57%; }
   .intro__slide--how .intro__line {
-    top: 50%;
+    left: 49%;
+    top: 65.8%;
     width: 42%;
-    font-size: 11cqw;
-    line-height: 1.05;
+    font-size: 10.1cqw;
+    line-height: 1.12;
     text-align: center;
     white-space: normal;
   }
-  .intro__slide--how .intro__img--left,
-  .intro__slide--how .intro__img--right { top: 0; width: auto; height: 100%; }
-  .intro__slide--how .intro__img--left  { left: 0; transform: translateX(-70%); }
-  .intro__slide--how .intro__img--right { left: auto; right: 0; transform: translateX(70%); }
 
-  .intro__slide--got .intro__line { font-size: 13cqw; }
+  /* "I've got you." (from the phone mockup): a touch larger and lower, thicker dashes */
+  .intro__slide--got .intro__line { top: 48%; font-size: 13.4cqw; }
 }
 
 /* Keep phones' cursor and box readable */
 @media (max-aspect-ratio: 1/1) and (max-width: 480px) {
-  .intro__box { border-width: 1.5px; }
+  .intro__box { border-width: 2px; }
 }
 
 /* Header button: one line; on small phones it just says "Book" */

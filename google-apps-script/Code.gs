@@ -1,5 +1,5 @@
 /**
- * Quote form → Gmail + Google Drive
+ * Quote form to Gmail + Google Drive
  * ---------------------------------
  * Paste this whole file into a Google Apps Script project (script.google.com),
  * then deploy it as a Web app. Full steps are in README.md, step 1.
@@ -132,7 +132,7 @@ function doGet() {
 }
 
 /**
- * Run this once from the editor (select testSetup ▸ Run) to grant permissions
+ * Run this once from the editor (select testSetup, then click Run) to grant permissions
  * and send yourself a sample request.
  */
 function testSetup() {

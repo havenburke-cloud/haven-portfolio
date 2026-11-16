@@ -1143,6 +1143,7 @@ textarea:focus-visible {
 
 /* White-background screens scale to fit (never crop the SPIN button or the box);
    photo screens above scale to fill. */
+.intro__slide--looking .intro__frame,
 .intro__slide--maybe .intro__frame,
 .intro__slide--got .intro__frame { width: min(100%, 140.625svh); }
 
@@ -1154,6 +1155,7 @@ textarea:focus-visible {
     aspect-ratio: auto;
     transform: none;
   }
+  .intro__slide--looking .intro__frame,
   .intro__slide--maybe .intro__frame,
   .intro__slide--got .intro__frame { width: auto; }
 
@@ -1161,7 +1163,7 @@ textarea:focus-visible {
   .intro__slide--hello .intro__img  { left: 50%; top: auto; bottom: 0; width: auto; height: 46%; transform: translateX(-50%); }
 
   .intro__slide--looking .intro__line { top: 17%; font-size: 12.5cqw; }
-  .intro__slide--looking .intro__img  { left: 50%; top: auto; bottom: 0; width: auto; height: 64%; transform: translateX(-50%); }
+  .intro__slide--looking .intro__img  { left: 50%; top: auto; bottom: 0; width: auto; height: 62%; transform: translateX(-50%); }
 
   .intro__slide--maybe .intro__line { left: 8%; top: 17%; transform: none; font-size: 15cqw; }
   .intro__slide--maybe .intro__img  { left: 50%; top: auto; bottom: 7%; width: min(96%, 70vh); transform: translateX(-50%); }

@@ -92,30 +92,20 @@ Open <http://localhost:8000> and stop the server with `Ctrl+C`. While `FORM_ENDP
 
 | Where | Placeholder | Replace with |
 | --- | --- | --- |
-| `js/main.js`, top | `YOUR_APPS_SCRIPT_URL_HERE` | Web app URL from step 1 |
-| `js/main.js`, top | `YOUR_BOOKING_URL_HERE` | Appointment schedule link from step 2 |
 | `index.html`, Consultation card | `20 minutes` and `$20` | Your call length and fee, if they change |
-| `index.html`, Services (×3) | `Starting at $___` | Your starting prices |
-| `index.html`, Services | Tier descriptions and bullet points | What you actually include |
-| `index.html`, About (marked `PLACEHOLDER BIO`) | The four bio paragraphs | Your own bio |
-| `index.html`, About | `[a personal detail or two, …]` | A personal touch |
-| `index.html`, Hero | "Clean, considered websites…" | Your own tagline, if you like |
 | `index.html`, Confirmation | `[2 business days]` | Your real reply time |
 | `index.html`, Footer | `hello@yourdomain.com` (link and text) | The email you want public |
 | `index.html`, Footer | `https://instagram.com/yourhandle` | Your Instagram |
 | `index.html`, Footer | `https://tiktok.com/@yourhandle` | Your TikTok |
 | `index.html`, Footer | `https://www.linkedin.com/in/yourprofile` | Your LinkedIn, or delete the line |
 | `index.html`, `<meta name="description">` | Site description | Your one-sentence description for Google |
-| `index.html`, Work section | Alt text and `data-title` | Correct spellings of client names |
 
-Search tip: searching for `YOUR_`, `yourdomain`, `yourhandle`, `yourprofile`, `$___` and `[` finds most of these.
+Search tip: searching for `yourdomain`, `yourhandle`, `yourprofile` and `[` finds most of these.
 
 ---
 
 ## Customising
 
 - **Colours, fonts, spacing:** CSS variables at the top of `css/styles.css` (`--accent`, `--font-serif`, …).
-- **Hero background grey:** `--hero-grey: #dadbdf` matches your photo's backdrop. Update it if you change the photo.
-- **Work screenshots:** the `<img class="laptop__slide">` tags in `index.html`, in rotation order; dots are generated automatically. Export new ones as JPG about 1600px wide. Change the timing with `SLIDE_INTERVAL_MS` in `js/main.js`.
 - **Upload limits:** top of `js/main.js`. Images are shrunk in the visitor's browser to 2000px before sending, so a phone photo uploads at well under 1 MB.
 - **Custom domain:** buy a domain, then in GitHub go to the repo's **Settings → Pages → Custom domain** and follow the DNS instructions there.

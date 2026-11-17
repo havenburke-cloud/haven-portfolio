@@ -2,7 +2,7 @@
 
 Portfolio and booking site. Plain HTML, CSS and vanilla JavaScript: no frameworks, no build step.
 
-- **Book a consultation** ($20, paid through Stripe) goes to your **Google Calendar** (appointment schedule).
+- **Book a consultation** ($35, paid through Stripe) goes to your **Google Calendar** (appointment schedule).
 - **Questions** from the "Have a question?" form go to your **Gmail**.
 - Hosted free on **GitHub Pages**.
 
@@ -45,22 +45,22 @@ Options at the top of `Code.gs`:
 
 Bookings land on your Google Calendar, and Google emails both you and the client. Appointment schedules are free with a personal Gmail account; some extras (such as checking several calendars or sending reminder emails) need a paid Google plan. Check Google's help page for the current details.
 
-## Step 2b: Charge $20 for consultations (Stripe)
+## Step 2b: Charge $35 for consultations (Stripe)
 
 Payments need a paid Google plan (Google Workspace, or Google One Premium) **on the same account that owns the appointment schedule**. If the schedule still shows "Upgrade", it was made in an account without the plan.
 
 1. In Google Calendar, click your appointment schedule → **pencil (Edit)**.
 2. Open **Payments & cancellation policy** → turn on **Require payment** → **Connect Stripe account**.
 3. Sign in to Stripe or create an account. Stripe asks for your business details, your bank account (for payouts) and ID verification. Use "Individual / sole proprietor" if you don't have a registered business.
-4. Back in Google Calendar, set the **price to $20.00 USD**.
+4. Back in Google Calendar, set the **price to $35.00 USD**.
 5. Add your **cancellation policy** (text below), then click **Save**.
 6. Optional (premium): under **Booking form**, turn on **email verification**; under **Booking confirmations and reminders**, add an **email reminder** (e.g. 1 day before).
 
 Suggested cancellation policy text:
 
-> The $20 consultation fee is paid at booking and will be deducted from your final website price if you move forward. The fee is non-refundable if you decide not to go ahead. To reschedule, please give at least 24 hours' notice.
+> The $35 consultation fee is paid at booking and will be deducted from your final website price if you move forward. The fee is non-refundable if you decide not to go ahead. To reschedule, please give at least 24 hours' notice.
 
-Stripe keeps a small fee per payment (about 2.9% + 30¢ in the US), so you receive about $19.12.
+Stripe keeps a small fee per payment (about 2.9% + 30¢ in the US), so you receive about $33.69.
 
 ## Step 3: Publish your changes
 
@@ -92,7 +92,7 @@ Open <http://localhost:8000> and stop the server with `Ctrl+C`. While `FORM_ENDP
 
 | Where | Placeholder | Replace with |
 | --- | --- | --- |
-| `index.html`, Consultation card | `20 minutes` and `$20` | Your call length and fee, if they change |
+| `index.html`, Consultation card | `20 minutes` and `$35` | Your call length and fee, if they change |
 | `index.html`, Footer | Commented-out email / social links | Your public email and social links (examples are in the comment) |
 
 ---

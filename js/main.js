@@ -14,7 +14,7 @@ const FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbx-02Ap8oKV1Pw5Lq
    >>> 2. CONSULTATION BOOKING → GOOGLE CALENDAR <<<
    Your Google Calendar appointment schedule link (README.md, step 2).
    The "Choose a time" button opens it in a new tab, where Google takes the
-   $20 payment through Stripe. Either the long link (…/appointments/schedules/…)
+   $35 payment through Stripe. Either the long link (…/appointments/schedules/…)
    or the short share link (https://calendar.app.google/…) works.
    While it says YOUR_BOOKING_URL_HERE, a "booking opens soon" note shows.
    -------------------------------------------------------------------------- */

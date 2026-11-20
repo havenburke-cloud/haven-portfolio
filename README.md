@@ -58,7 +58,7 @@ Payments need a paid Google plan (Google Workspace, or Google One Premium) **on 
 
 Suggested cancellation policy text:
 
-> The $35 consultation fee is paid at booking and will be deducted from your final website price if you move forward. The fee is non-refundable if you decide not to go ahead. To reschedule, please give at least 24 hours' notice.
+> The $35 consultation fee is paid at booking and covers the consultation. It is separate from your website quote and is non-refundable. To reschedule, please give at least 24 hours' notice.
 
 Stripe keeps a small fee per payment (about 2.9% + 30¢ in the US), so you receive about $33.69.
 
